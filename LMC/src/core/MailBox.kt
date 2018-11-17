@@ -2,21 +2,45 @@ package core
 
 import utils.Vec2
 import utils.with
-import java.awt.Color
-import java.awt.Graphics2D
-import java.awt.Rectangle
+import java.awt.*
 import java.awt.geom.AffineTransform
 import java.awt.geom.RoundRectangle2D
 import java.lang.Math.ceil
 import java.lang.Math.floor
+import javax.swing.BorderFactory
 import javax.swing.JTextField
 import kotlin.math.roundToInt
 
 data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction) {
 
     val color = instruction.operation.color
+    val fontColor = instruction.operation.fontColor
 
-    val boxValueField = JTextField()
+    val boxValueField = object : JTextField(instruction.toString()) {
+        init {
+            border = BorderFactory.createEmptyBorder()
+            foreground = fontColor
+            background = Color(0, 0, 0, 0)
+            font = font.deriveFont(Font.BOLD, font.size + 2f)
+            horizontalAlignment = JTextField.CENTER
+        }
+
+        override fun paint(g: Graphics?) {
+            g as Graphics2D
+
+            g.with(color = color) {
+                g.fill(RoundRectangle2D.Double(
+                        0.0,
+                        0.0,
+                        width.toDouble(),
+                        height.toDouble(),
+                        ROUNDNESS,
+                        ROUNDNESS
+                ))
+            }
+            super.paint(g)
+        }
+    }
 
     init {
 
@@ -29,7 +53,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                     Vec2(boxNo % 10 * size.x / 10, boxNo / 10 * size.y / 10)
                 }
                 1 -> {
-                    Vec2(boxNo % 5 * size.x / 5, boxNo / 5 * size.y / 10)
+                    Vec2(boxNo % 10 * size.x / 10, boxNo / 10 * size.y / 10 * 1.5)
                 }
                 2 -> {
                     Vec2(0, lineNo * size.y / 10)
@@ -49,7 +73,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                     Vec2(size.x / 10, size.y / 10)
                 }
                 1 -> {
-                    Vec2(size.x / 5, size.y / 10)
+                    Vec2(size.x / 10, size.y / 10 * 1.5)
                 }
                 2 -> {
                     Vec2(size.x, size.y / 10)
@@ -81,14 +105,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                 ))
             }
             g.with(color = color) {
-                g.fill(RoundRectangle2D.Double(
-                        4.0,
-                        size.y * .5 - 4,
-                        size.x - 8,
-                        size.y * .5,
-                        12.0,
-                        12.0
-                ))
+
                 boxValueField.bounds = Rectangle(
                         (location.x + 4).toInt(),
                         (location.y + size.y * .5 - 4).toInt(),
@@ -97,6 +114,10 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                 )
             }
         }
+    }
+
+    companion object {
+        const val ROUNDNESS = 12.0
     }
 
 }
