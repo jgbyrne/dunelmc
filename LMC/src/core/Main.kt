@@ -6,7 +6,7 @@ import javax.swing.WindowConstants.EXIT_ON_CLOSE
 
 fun main(args: Array<String>) {
 
-    val session = Session()
+    val session = Session("code goes here")
 
     val frame = JFrame("LMC")
     frame.contentPane = ContentPane(session)

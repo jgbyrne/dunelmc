@@ -2,7 +2,7 @@ package core
 
 import java.awt.Color
 
-enum class Operations(opcode: Int, color: Color) {
+enum class Operations(val opcode: Int, val color: Color) {
     ADD(100, Color.decode("#FFEB3B")),
     SUB(200, Color.decode("#FF9800")),
     STO(300, Color.decode("#8BC34A")),

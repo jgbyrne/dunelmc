@@ -7,7 +7,6 @@ import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.event.MouseWheelEvent
 import java.awt.event.MouseWheelListener
-import java.awt.geom.Rectangle2D
 import java.lang.Math.*
 import kotlin.math.roundToInt
 
@@ -16,21 +15,25 @@ class MailBoxArea(session: Session, start: Vec2, size: Vec2) : Area(session, sta
     private var animationThread: AnimationThread? = null
 
     init {
-        preferredSize = Dimension(630,630)
+        preferredSize = Dimension(630, 630)
         addMouseWheelListener(this)
     }
 
     override fun paint(g: Graphics) {
+        super.paint(g)
         g as? Graphics2D ?: throw  Exception("Cast Failed")
-        g.draw(Rectangle2D.Double(viewMode * 100, viewMode * 100, 100.0, 100.0))
 
+        val size = Vec2(width, height)
+        session.boxes.forEach {
+            it.draw(g, viewMode, size)
+        }
     }
 
     override fun mouseWheelMoved(e: MouseWheelEvent) {
-        print("yolo")
+
         animationThread?.interrupt()
         val currentTime = System.currentTimeMillis()
-        val nextViewMode = max(0.0, min(2.0, viewMode.roundToInt().toDouble() - e.scrollAmount))
+        val nextViewMode = max(0.0, min(2.0, viewMode.roundToInt().toDouble() - e.wheelRotation))
         animationThread = AnimationThread(
                 this,
                 currentTime,
