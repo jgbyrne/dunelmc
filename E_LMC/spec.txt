@@ -1,0 +1,164 @@
+INP(A)#
+	The user is asked for an input and it will be stored in A
+
+			IN
+			STO 	A
+
+OUT(A)#
+	A is loaded and then displayed
+			
+			LDA	A
+			OUT
+
+MOV(A,B)#
+	If A does not exist
+		Create a DATA cell to store A
+	A is set to B/#B
+	
+
+			LDA	B
+			STO	A
+	?<
+			DAT	A
+	?>
+
+
+
+
+
+
+INC(A,B)
+	A is set to the value in A plus the value in B/#B
+	
+			LDA	A
+			ADD	B
+			STO	A
+
+DEC(A,B)
+	A is set ot the value in A minus the value in B/#B
+	
+			LDA 	A
+			SUB 	B
+			STO	A
+
+
+
+MUL(A,B)
+	If the system constant 0 and 1 are not present, create it
+	create a TEMP_VAR  equal to A
+	create a TEMP_VAR2 equal to 0
+	Check if TEMP_VAR is 0
+	Continusly add B to TEMP_VAR2
+	DEC(TEMP_VAR, 1)
+	loop to start	
+
+		loop	LDA	TEMP_VAR
+			BRZ	e_o_m
+			SUB	SC_ONE
+			STO	TEMP_VAR
+			LDA	TEMP_VAR2
+			ADD	B
+			STO	TEMP_VAR2
+			BRA	loop
+		e_o_m	LDA	TEMP_VAR2
+			STO	A
+			#
+			#
+	TEMP_VAR	DAT	A
+	TEMP_VAR2	DAT	SV_ZERO
+
+DIV(A,B)
+	If the system constant 1 is not present, create it
+	create a TEMP_VAR equa to 0
+	Continsuoly subtract B from A until A the negative flag is rasied
+	Every time the negative flag is not rasied, increiment the TEMP_VAR by 1
+	When the negative flag is rasied
+		Store A with TEMP_VAR
+
+		loop	LDA	A
+			SUB	B
+			BRP	incri
+			LDA	TEMP_VAR
+			STO	A
+			BRA	e_o_l
+		incri	STO	A
+			LDA	TEMP_VAR
+			ADD	SV_ONE
+			STO 	TEMP_VAR
+			BRA	loop
+		e_o_l	next line
+			
+
+
+WHILE(A,B){}
+	A and B can only be labels
+	The loop will run while A == B
+	content can be added to the loop
+
+
+		c_loop	LDA	A
+			SUB	B
+			BRZ	loop
+			BRA	e_o_l
+		loop	{
+			stuff
+			stuff
+			stuff
+			stuff
+			}
+			BRA	c_loop
+		e_o_l	next line
+
+IF(A,B){}
+	A and B can both only be labels
+	It will check if A == B via a zero check
+
+			LDA A
+			SUB B
+			BRZ e_o_l
+			{
+			stuff
+			stuff
+			stuff
+			stuff
+			}
+		e_o_l	next line
+
+FOR(A,B){}
+	A and B can both only be labels
+	This will be a FOR loop that will run between A and B
+	create a TEMP_VAR  with value stored in A
+	create a TEMP_VAR2 with value stored in B
+	check if TEMP_VAR == TEMP_VAR2 via a 0 check
+	otherwise
+		run stuff
+		increiment TEMP_VAR
+		check again
+
+		loop	LDA	TEMP_VAR
+			SUB	TEMP_VAR2
+			BRZ	e_o_l
+			{
+			stuff
+			stuff
+			stuff
+			stuff
+			}
+			LDA	TEMP_VAR
+			ADD	SV_ONE
+			STO	TEMP_VAR
+			BRA	loop
+		e_o_l	next line
+			#
+			#
+	TEMP_VAR	DAT	A
+	TEMP_VAR	DAT	B
+
+	
+
+
+
+		
+
+
+	
