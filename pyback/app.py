@@ -304,6 +304,52 @@ def step():
     else:
         return (json.dumps({"exec_id" : exec_id, "asm" : asm, "labels": sessions[exec_id].asm.symbols, "registers": registers}), 200, {})
 
+@app.route("/run", methods=["GET"])
+def run():
+    global sessions
+
+    if flask.request.args["exec_id"] is None:
+        return ("", 404, {})
+
+    exec_id = int(flask.request.args["exec_id"])
+    ex = sessions[exec_id].ex
+    while True:
+        if ex.needs_input():
+            if sessions[exec_id].inp is None:
+                return ("", 412, {})
+            else:
+                try:
+                    code = ex.cycle(inp = int(sessions[exec_id].inp))
+                except (EOFError, ValueError):
+                    return ("", 422, {})
+                else:
+                    sessions[exec_id].inp = None
+        else:
+            code = ex.cycle()
+        if code == Exec.HALT or code == Exec.OUTPUT:
+            break
+
+    asm = []
+    for i, mb in enumerate(ex.memory):
+        asm.append({"addr": "{:02d}".format(i) ,
+                    "data": "{:03d}".format(mb),
+                    "lno" : "999",
+                    "line": "-----"
+                    })
+
+    registers = {"outbox": "{:03d}".format(ex.outbox), "inbox": "{:03d}".format(ex.inbox), "pc": "{:02d}".format(ex.pc), "ip": "{:02d}".format(ex.ip), "acc": "{:03d}".format(ex.acc), "neg": ex.neg}
+
+    print(registers)
+
+    if code == Exec.HALT:
+        return ("", 202, {})
+    if code == Exec.OUTPUT:
+        return (str(ex.outbox), 201, {})
+    else:
+        return (json.dumps({"exec_id" : exec_id, "asm" : asm, "labels": sessions[exec_id].asm.symbols, "registers": registers}), 200, {})
+
+
+
 if False:# __name__ == "__main__":
     if len(sys.argv) > 1:
         a1 = sys.argv[1]
