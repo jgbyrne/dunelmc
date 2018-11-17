@@ -1,0 +1,6 @@
+MOV(A,10);
+INP(X);
+INP(W);
+MOV(W,X);
+OUT(W);
+OUT(A);

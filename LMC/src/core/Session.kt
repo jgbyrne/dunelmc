@@ -1,6 +1,12 @@
 package core
 
 class Session(val code: String) {
+
+    val inputQueue = listOf<String>("123", "5", "7")
+    val outputList = listOf<String>("bad")
+
+    val PC: Int = 1
+
     val lines = code.split("\n").mapIndexed { index, s ->
         index to s
     }.associate { it }
@@ -8,7 +14,7 @@ class Session(val code: String) {
     val boxes = (0 until 105).map {
         MailBox(it * 2, it, Instruction(
                 "name,",
-                Operations.values()[it % (Operations.values().size - 1)],
+                Operations.values()[it % Operations.values().size],
                 "54"
         ))
     }

@@ -32,7 +32,7 @@ open class Area(val session:Session, val start: Vec2, val size: Vec2) : JPanel()
                 size.x,
                 size.y
         ))
-        g.drawString(javaClass.name, 12, 20)
+//        g.drawString(javaClass.name, 12, 20)
     }
 
 }
