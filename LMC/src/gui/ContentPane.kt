@@ -4,6 +4,7 @@ import core.Session
 import utils.Vec2
 import java.awt.*
 import javax.swing.JPanel
+import javax.swing.JScrollPane
 
 class ContentPane(val session: Session) : JPanel() {
     init {
@@ -20,7 +21,12 @@ class ContentPane(val session: Session) : JPanel() {
 
         layout = BorderLayout()
         add(rightSide, BorderLayout.EAST)
-        add(mailBoxArea, BorderLayout.CENTER)
+        val scrollArea: JScrollPane
+        scrollArea = JScrollPane(mailBoxArea)
+        scrollArea.preferredSize = Dimension(630 + 20, 630 + 20)
+        scrollArea.horizontalScrollBar.isEnabled = false
+        scrollArea.horizontalScrollBar.isVisible = false
+        add(scrollArea, BorderLayout.CENTER)
 
     }
 

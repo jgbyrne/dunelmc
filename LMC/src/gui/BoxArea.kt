@@ -7,6 +7,7 @@ import java.awt.event.MouseWheelEvent
 import java.awt.event.MouseWheelListener
 import java.lang.Math.*
 import javax.swing.JTextArea
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 class BoxArea(session: Session) : Area(session), MouseWheelListener {
@@ -18,20 +19,38 @@ class BoxArea(session: Session) : Area(session), MouseWheelListener {
     val editor = JTextArea(session.code)
 
     init {
-        preferredSize = Dimension(630, 630)
+        preferredSize = Dimension(PREF_WIDTH, MIN_HEIGHT)
         addMouseWheelListener(this)
 
         add(editor)
         editor.setBounds(0, 0, width, height)
 
         layout = null
-        val size = Vec2(width, height)
         session.boxes.forEach {
             add(it.boxValueField)
             add(it.mnemonicLabel)
         }
     }
 
+    override fun setBounds(x: Int, y: Int, width: Int, height: Int) {
+        super.setBounds(x, y, width, height)
+
+        val size = Vec2(width, height)
+        session.boxes.forEach {
+            it.update(viewMode, size, this)
+        }
+        parent.repaint()
+    }
+
+    override fun setBounds(r: Rectangle?) {
+
+        super.setBounds(r)
+        val size = Vec2(width, height)
+        session.boxes.forEach {
+            it.update(viewMode, size, this)
+        }
+        parent.repaint()
+    }
 
     override fun paint(g: Graphics) {
         super.paint(g)
@@ -59,16 +78,6 @@ class BoxArea(session: Session) : Area(session), MouseWheelListener {
             )
             animationThread?.start()
 
-        } else {
-
-            scrollOffset += e.wheelRotation
-
-            val size = Vec2(width, height)
-            session.boxes.forEach {
-                it.update(viewMode, size, this)
-            }
-            repaint()
-
         }
 
     }
@@ -86,17 +95,38 @@ class BoxArea(session: Session) : Area(session), MouseWheelListener {
                 val currentTime = System.currentTimeMillis()
                 val t = (currentTime - startTime) / duration
                 val swing = 3 * pow(t, 2.0) - 2 * pow(t, 3.0)
+
                 mailBoxArea.viewMode = swing * toValue + (1 - swing) * fromValue
+                with(mailBoxArea) {
+                    val size = Vec2(width, height)
+                    session.boxes.forEach {
+                        it.update(viewMode, size, this)
+                    }
+                }
                 mailBoxArea.repaint()
+
                 try {
                     sleep(5)
                 } catch (e: InterruptedException) {
                     break
                 }
             } while (currentTime < endTime && !isInterrupted)
+
             mailBoxArea.viewMode = toValue
+            with(mailBoxArea) {
+                val size = Vec2(width, height)
+                session.boxes.forEach {
+                    it.update(viewMode, size, this)
+                }
+            }
+
             mailBoxArea.repaint()
         }
+    }
+
+    companion object {
+        val PREF_WIDTH = 630
+        val MIN_HEIGHT = 630
     }
 
 }
