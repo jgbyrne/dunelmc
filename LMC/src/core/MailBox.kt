@@ -1,5 +1,6 @@
 package core
 
+import gui.BoxArea
 import utils.Vec2
 import utils.drawStringCentred
 import utils.with
@@ -12,7 +13,6 @@ import java.lang.Math.floor
 import javax.swing.BorderFactory
 import javax.swing.JLabel
 import javax.swing.JTextField
-import kotlin.math.roundToInt
 
 data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction) {
 
@@ -50,7 +50,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
 
     }
 
-    fun getLocation(viewMode: Double, size: Vec2): Vec2 {
+    fun getLocation(viewMode: Double, size: Vec2, area: BoxArea): Vec2 {
         return if (viewMode % 1.0 == 0.0) {
             when (viewMode.toInt()) {
                 0 -> {
@@ -66,8 +66,8 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
             }
         } else {
             val along = viewMode % 1.0
-            getLocation(ceil(viewMode), size) * along + getLocation(floor(viewMode), size) * (1 - along)
-        }
+            getLocation(ceil(viewMode), size, area) * along + getLocation(floor(viewMode), size, area) * (1 - along)
+        } + Vec2(0, area.scrollOffset * 40)
     }
 
     fun getSize(viewMode: Double, size: Vec2): Vec2 {
@@ -106,15 +106,14 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
     }
 
 
-    fun draw(g: Graphics2D, viewMode: Double, size: Vec2, session: Session) {
-        val location = getLocation(viewMode, size)
+    fun draw(g: Graphics2D, viewMode: Double, size: Vec2, boxArea: BoxArea) {
+        val location = getLocation(viewMode, size, boxArea)
         val cellSize = getSize(viewMode, size)
+
         g.with(
                 deltaTransform = AffineTransform.getTranslateInstance(location.x, location.y)
         ) {
-            val label = (if (viewMode.roundToInt() == 2) lineNo else boxNo).toString()
-
-            g.drawStringCentred(label, Vec2(cellSize.x / 2, size.y / 10 * .2))
+            g.drawStringCentred(boxNo.toString(), Vec2(cellSize.x / 2, size.y / 10 * .2))
             g.with(color = Color(color.red, color.green, color.blue, 100)) {
                 g.fill(RoundRectangle2D.Double(
                         0.0,
@@ -126,7 +125,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                 ))
             }
 
-            if (boxNo == session.PC) {
+            if (boxNo == boxArea.session.PC) {
                 g.with(color = RED, stroke = BasicStroke(4f)) {
                     g.draw(RoundRectangle2D.Double(
                             0.0,
@@ -139,25 +138,32 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                 }
             }
 
-            boxValueField.bounds = Rectangle(
-                    (location.x + 4).toInt(),
-                    (location.y + cellSize.y - size.y / 10 * .6 - 4).toInt(),
-                    (cellSize.x - 8).toInt(),
-                    (size.y / 10 * .6).toInt())
 
-            mnemonicLabel.bounds = Rectangle(
-                    (location.x).toInt(),
-                    (location.y).toInt(),
-                    (cellSize.x).toInt(),
-                    (cellSize.y * .8).toInt()
-            )
-            mnemonicLabel.foreground = Color(
-                    mnemonicLabel.foreground.red,
-                    mnemonicLabel.foreground.green,
-                    mnemonicLabel.foreground.blue,
-                    (getMnemonicVisibility(viewMode) * 255).toInt()
-            )
         }
+    }
+
+    fun update(viewMode: Double, size: Vec2, boxArea: BoxArea) {
+        val location = getLocation(viewMode, size, boxArea)
+        val cellSize = getSize(viewMode, size)
+
+        boxValueField.bounds = Rectangle(
+                (location.x + 4).toInt(),
+                (location.y + cellSize.y - size.y / 10 * .6 - 4).toInt(),
+                (cellSize.x - 8).toInt(),
+                (size.y / 10 * .6).toInt())
+
+        mnemonicLabel.bounds = Rectangle(
+                (location.x).toInt(),
+                (location.y).toInt(),
+                (cellSize.x).toInt(),
+                (cellSize.y * .8).toInt()
+        )
+        mnemonicLabel.foreground = Color(
+                mnemonicLabel.foreground.red,
+                mnemonicLabel.foreground.green,
+                mnemonicLabel.foreground.blue,
+                (getMnemonicVisibility(viewMode) * 255).toInt()
+        )
     }
 
     companion object {

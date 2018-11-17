@@ -2,16 +2,14 @@ package gui
 
 import core.Session
 import utils.Vec2
-import java.awt.Dimension
-import java.awt.Graphics
-import java.awt.Graphics2D
+import java.awt.*
 import java.awt.event.MouseWheelEvent
 import java.awt.event.MouseWheelListener
 import java.lang.Math.*
 import javax.swing.JTextArea
 import kotlin.math.roundToInt
 
-class BoxArea(session: Session, start: Vec2, size: Vec2) : Area(session, start, size), MouseWheelListener {
+class BoxArea(session: Session) : Area(session), MouseWheelListener {
 
     var viewMode: Double = 0.0
     var scrollOffset: Double = 0.0
@@ -27,12 +25,13 @@ class BoxArea(session: Session, start: Vec2, size: Vec2) : Area(session, start, 
         editor.setBounds(0, 0, width, height)
 
         layout = null
+        val size = Vec2(width, height)
         session.boxes.forEach {
             add(it.boxValueField)
             add(it.mnemonicLabel)
         }
-
     }
+
 
     override fun paint(g: Graphics) {
         super.paint(g)
@@ -40,7 +39,7 @@ class BoxArea(session: Session, start: Vec2, size: Vec2) : Area(session, start, 
 
         val size = Vec2(width, height)
         session.boxes.forEach {
-            it.draw(g, viewMode, size, session)
+            it.draw(g, viewMode, size, this)
         }
     }
 
@@ -62,7 +61,13 @@ class BoxArea(session: Session, start: Vec2, size: Vec2) : Area(session, start, 
 
         } else {
 
-            scrollOffset -= e.wheelRotation
+            scrollOffset += e.wheelRotation
+
+            val size = Vec2(width, height)
+            session.boxes.forEach {
+                it.update(viewMode, size, this)
+            }
+            repaint()
 
         }
 
