@@ -4,22 +4,27 @@ This document describes the HTTP API which facilitates between the interpreter a
 
 ### Compile
 
+```
 Endpoint : POST /compile  
 Body     : LMC Program Text (json?)  
 Response : 200 - Intitial Machine State JSON  
            418 - Compilation Error JSON   
+```
 
 ### Step
 
+```
 Endpoint: POST /step
 Query   : exec - execution id  
+```
 
 ### Configure
 
+```
 Endpoint : POST /configure  
 Body     : Semantic Flags  
 Response : 200 or 418  
-
+```
 
 ----
 
