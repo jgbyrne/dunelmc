@@ -1,0 +1,76 @@
+MOV(A,B)
+	If A does not exist
+		Create a DATA cell to store A
+	A is set to B/#B
+	
+
+			LDA	B
+			STO	A
+	?<
+			DAT	A
+	?>
+
+INC(A,B)
+	A is set to the value in A plus the value in B/#B
+	
+			LDA	A
+			ADD	B
+			STO	A
+
+DEC(A,B)
+	A is set ot the value in A minus the value in B/#B
+	
+			LDA 	A
+			SUB 	B
+			STO	A
+
+
+
+MUL(A,B)
+	If the system constant 0 and 1 are not present, create it
+	create a TEMP_VAR  equal to A
+	create a TEMP_VAR2 equal to 0
+	Check if TEMP_VAR is 0
+	Continusly add B to TEMP_VAR2
+	DEC(TEMP_VAR, 1)
+	loop to start	
+
+		loop	LDA	TEMP_VAR
+			BRZ	e_o_m
+			SUB	SC_ONE
+			STO	TEMP_VAR
+			LDA	TEMP_VAR2
+			ADD	B
+			STO	TEMP_VAR2
+			BRA	loop
+		e_o_m	LDA	TEMP_VAR2
+			STO	A
+			#
+			#
+	TEMP_VAR	DAT	A
+	TEMP_VAR2	DAT	SC_ZERO
+
+
+WHILE(A,B){}
+	A and B can only be labels
+	The loop will run while A == B
+	content can be added to the loop
+
+
+			LDA	A
+			SUB	B
+			BRZ	loop
+			BRA	e_o_l
+		loop	{
+			stuff
+			stuff
+			stuff
+			stuff
+			}
+		e_o_l	next line
+
+
+		
+
+
+	

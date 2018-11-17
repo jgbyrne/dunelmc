@@ -1,0 +1,30 @@
+Two sections to program
+	INSTRUCTIONS and DATA
+
+All data is stored and accessed soley from the DATA section
+
+No self editing code
+
+Whitespace is removed
+
+Two types of incructions
+	Self
+		All data interacted with is expliectly referenced by the user
+	External
+		Some data interacted with is made by the system and the user may not be aware of it
+
+
+Start of program
+	make list of all labels
+	check all labels are valid
+	look at which functions are called to determine how many temps
+	create unquie labels after
+		start with "temp"
+		continusoy add "1"
+		e.g. "temp1", "temp2"
+		test if valid
+
+For most functions, the first argument is a label. The second argument can be either a label or a number. If it is a number, a TEMP_DATA is created with the number and then the function is run again
+
+There will be some system constants that the program uses in order to reduce code redundency
+	Denoted by SC_[name]
