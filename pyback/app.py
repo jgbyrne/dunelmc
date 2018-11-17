@@ -174,7 +174,6 @@ class Exec:
         self.pc += 1
         op = Op(ir // 100)
         xx = ir - (op.value * 100)
-
         if op == Op.ADD:
             self.neg = False
             self.acc, _ = curtail(self.acc + self.memory[xx])
@@ -224,19 +223,20 @@ class ESesh:
     def __init__(self, exec_, prog):
         self.exec_ = exec_
         self.asm = Assembler(prog)
+        self.inp = None
 
     def execute(self):
         self.ex = Exec(self.asm.mem)
 
 next_exec = 1
-sessions  = []
+sessions  = {}
 
 @app.route("/compile", methods=['POST'])
 def compile():
     global next_exec
     global sessions
 
-    s = ESesh(next_exec, str(flask.request.data))
+    s = ESesh(next_exec, flask.request.data.decode("utf-8"))
     asm = []
     for i, mb in enumerate(s.asm.mem):
         asm.append({"addr": "{:02d}".format(i) ,
@@ -244,13 +244,65 @@ def compile():
                     "lno" : "999",
                     "line": "-----"
                     })
-
     registers = {"outbox": "000", "inbox": "000", "pc": "000", "ip": "000", "acc": "000", "neg": False}
 
-    sessions.append(s)
+    sessions[next_exec] = s
     next_exec += 1
-    return json.dumps({"exec" : s.exec_, "asm" : asm, "labels": s.asm.symbols, "registers": registers})
+    s.execute()
+    return json.dumps({"exec_id" : s.exec_, "asm" : asm, "labels": s.asm.symbols, "registers": registers})
 
+@app.route("/input", methods=["POST"])
+def input():
+    global sessions
+
+    print(flask.request.data.decode("utf-8"))
+
+    if flask.request.args["exec_id"] is None:
+        return ("", 404, {})
+
+    sessions[int(flask.request.args["exec_id"])].inp = flask.request.data.decode("utf-8")
+    return ("", 200, {})
+
+@app.route("/step", methods=["GET"])
+def step():
+    global sessions
+
+    if flask.request.args["exec_id"] is None:
+        return ("", 404, {})
+
+    exec_id = int(flask.request.args["exec_id"])
+    ex = sessions[exec_id].ex
+    if ex.needs_input():
+        if sessions[exec_id].inp is None:
+            return ("", 412, {})
+        else:
+            try:
+                code = ex.cycle(inp = int(sessions[exec_id].inp))
+            except (EOFError, ValueError):
+                return ("", 422, {})
+            else:
+                inp = None
+    else:
+        code = ex.cycle()
+
+    asm = []
+    for i, mb in enumerate(ex.memory):
+        asm.append({"addr": "{:02d}".format(i) ,
+                    "data": "{:03d}".format(mb),
+                    "lno" : "999",
+                    "line": "-----"
+                    })
+
+        registers = {"outbox": "{:03d}".format(ex.outbox), "inbox": "{:03d}".format(ex.inbox), "pc": "{:02d}".format(ex.pc), "ip": "{:02d}".format(ex.ip), "acc": "{:03d}".format(ex.acc), "neg": ex.neg}
+
+    print(registers)
+
+    if code == Exec.HALT:
+        return ("", 202, {})
+    if code == Exec.OUTPUT:
+        return (str(ex.outbox), 201, {})
+    else:
+        return (json.dumps({"exec_id" : exec_id, "asm" : asm, "labels": sessions[exec_id].asm.symbols, "registers": registers}), 200, {})
 
 if False:# __name__ == "__main__":
     if len(sys.argv) > 1:

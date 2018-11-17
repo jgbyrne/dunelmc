@@ -16,6 +16,12 @@ Response : 200 - Intitial Machine State JSON
 ```
 Endpoint: POST /step
 Query   : exec - execution id  
+Response: 200  - Good execution
+          201  - Output
+          202  - Halted
+          404  - No such Exec ID
+          412  - Requiring Input
+          422  - Bad input
 ```
 
 ### Configure
