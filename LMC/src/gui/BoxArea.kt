@@ -10,13 +10,19 @@ import java.awt.event.MouseWheelListener
 import java.lang.Math.*
 import kotlin.math.roundToInt
 
-class MailBoxArea(session: Session, start: Vec2, size: Vec2) : Area(session, start, size), MouseWheelListener {
+class BoxArea(session: Session, start: Vec2, size: Vec2) : Area(session, start, size), MouseWheelListener {
     var viewMode: Double = 0.0
     private var animationThread: AnimationThread? = null
 
     init {
         preferredSize = Dimension(630, 630)
         addMouseWheelListener(this)
+
+        layout = null
+        session.boxes.forEach {
+            add(it.boxValueField)
+        }
+
     }
 
     override fun paint(g: Graphics) {
@@ -44,7 +50,7 @@ class MailBoxArea(session: Session, start: Vec2, size: Vec2) : Area(session, sta
         animationThread?.start()
     }
 
-    private class AnimationThread(val mailBoxArea: MailBoxArea,
+    private class AnimationThread(val mailBoxArea: BoxArea,
                                   val startTime: Long,
                                   val endTime: Long,
                                   val fromValue: Double,
@@ -65,7 +71,8 @@ class MailBoxArea(session: Session, start: Vec2, size: Vec2) : Area(session, sta
                     break
                 }
             } while (currentTime < endTime && !isInterrupted)
-
+            mailBoxArea.viewMode = toValue
+            mailBoxArea.repaint()
         }
     }
 

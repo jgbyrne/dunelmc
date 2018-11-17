@@ -8,7 +8,7 @@ import javax.swing.JPanel
 class ContentPane(val session: Session) : JPanel() {
     init {
 
-        val mailBoxArea = MailBoxArea(session, Vec2(FRAME_PADDING, FRAME_PADDING),
+        val mailBoxArea = BoxArea(session, Vec2(FRAME_PADDING, FRAME_PADDING),
                 Vec2(height - FRAME_PADDING * 2, height - FRAME_PADDING * 2)
         )
         val registerAreaPreferedHeight = (height - FRAME_PADDING * 2) * 0.3
