@@ -32,7 +32,7 @@ class BoxArea(session: Session, start: Vec2, size: Vec2) : Area(session, start, 
 
         val size = Vec2(width, height)
         session.boxes.forEach {
-            it.draw(g, viewMode, size)
+            it.draw(g, viewMode, size, session)
         }
     }
 

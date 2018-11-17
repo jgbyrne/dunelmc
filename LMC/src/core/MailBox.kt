@@ -4,6 +4,7 @@ import utils.Vec2
 import utils.drawStringCentred
 import utils.with
 import java.awt.*
+import java.awt.Color.RED
 import java.awt.geom.AffineTransform
 import java.awt.geom.RoundRectangle2D
 import java.lang.Math.ceil
@@ -105,14 +106,14 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
     }
 
 
-    fun draw(g: Graphics2D, viewMode: Double, size: Vec2) {
+    fun draw(g: Graphics2D, viewMode: Double, size: Vec2, session: Session) {
         val location = getLocation(viewMode, size)
         val cellSize = getSize(viewMode, size)
         g.with(
                 deltaTransform = AffineTransform.getTranslateInstance(location.x, location.y)
         ) {
             val label = (if (viewMode.roundToInt() == 2) lineNo else boxNo).toString()
-            
+
             g.drawStringCentred(label, Vec2(cellSize.x / 2, size.y / 10 * .2) )
             g.with(color = Color(color.red, color.green, color.blue, 100)) {
                 g.fill(RoundRectangle2D.Double(
@@ -124,6 +125,20 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                         12.0
                 ))
             }
+
+            if (boxNo == session.PC){
+                g.with(color = RED, stroke = BasicStroke(4f)) {
+                    g.draw(RoundRectangle2D.Double(
+                            0.0,
+                            0.0,
+                            cellSize.x,
+                            cellSize.y,
+                            12.0,
+                            12.0
+                    ))
+                }
+            }
+
             boxValueField.bounds = Rectangle(
                     (location.x + 4).toInt(),
                     (location.y + cellSize.y - size.y / 10 * .6 - 4).toInt(),
