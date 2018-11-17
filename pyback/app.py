@@ -274,7 +274,7 @@ def step():
     ex = sessions[exec_id].ex
     if ex.needs_input():
         if sessions[exec_id].inp is None:
-            return ("", 412, {})
+            return (json.dumps({"exec_id" : exec_id, "asm" : asm, "labels": sessions[exec_id].asm.symbols, "registers": registers}), 412, {})
         else:
             try:
                 code = ex.cycle(inp = int(sessions[exec_id].inp))
@@ -298,7 +298,7 @@ def step():
     print(registers)
 
     if code == Exec.HALT:
-        return ("", 202, {})
+        return (json.dumps({"exec_id" : exec_id, "asm" : asm, "labels": sessions[exec_id].asm.symbols, "registers": registers}), 202, {})
     if code == Exec.OUTPUT:
         return (str(ex.outbox), 201, {})
     else:
@@ -348,147 +348,4 @@ def run():
     else:
         return (json.dumps({"exec_id" : exec_id, "asm" : asm, "labels": sessions[exec_id].asm.symbols, "registers": registers}), 200, {})
 
-
-
-if False:# __name__ == "__main__":
-    if len(sys.argv) > 1:
-        a1 = sys.argv[1]
-        if a1 == "--":
-            inp = sys.stdin.read()
-            # Ugly hack to take user input after previously reading stdin
-            sys.stdin = open("/dev/tty")
-            ex = Exec(Assembler(inp).mem)
-        else:
-            with open(sys.argv[1]) as prog:
-                asm = Assembler(prog.read())
-                ex = Exec(asm.mem, symbols=asm.symbols)
-    else:
-        print("JLMC needs either a program file as an argument, or the argument '--' and a progam on stdin")
-        sys.exit(1)
-
-    if "--debug" in sys.argv:
-        breaks  = []
-        run     = "--run" in sys.argv
-        ahdr = ["", " " * 22 + "JLMC Debugger"] + [""] * 3 + ["    Inputs     Outputs", "    ------     -------"]
-        inp  = None
-        first = True
-        while True:
-            if not first:
-                if ex.needs_input():
-                    if inp is None:
-                        print("Halting - No Input Given")
-                        sys.exit(1)
-                    try:
-                        code = ex.cycle(inp = int(inp))
-                    except (EOFError, ValueError, KeyboardInterrupt):
-                        print("Halting - Bad Input Value")
-                        sys.exit(1)
-                    else:
-                        inp = None
-                else:
-                    code = ex.cycle()
-            else:
-                first = False
-                code  = Exec.SUCCESS
-            print()
-            appends = [] + ahdr
-            for i in range(1, 8):
-                ln = []
-                ln.append("    {:03d}".format(ex.inputs[-i]) if i <= len(ex.inputs) else "       ")
-                if code == Exec.INPUT and i == 1:
-                    ln.append(" <      ")
-                else:
-                    ln.append("        ")
-                ln.append("{:03d}".format(ex.outputs[-i]) if i <= len(ex.outputs) else "   ")
-                if code == Exec.OUTPUT and i == 1:
-                    ln.append(" <  ")
-                else:
-                    ln.append("    ")
-                appends.append("".join(ln))
-            if inp is not None:
-                appends.append("    Next Input: {}".format(inp))
-            else:
-                appends.append("")
-
-            notices = []
-            if ex.ip in breaks:
-                notices.append("Hit Breakpoint (IP is {:02d})".format(ex.ip))
-            if ex.needs_input() and inp is None:
-                notices.append("Next instruction requires Input")
-            appends.append("  " + ", ".join(notices))
-
-
-            s = str(ex).split("\n")
-            for i, a in enumerate(appends):
-                s[i] += str(a)
-            print("\n".join(s))
-
-            while True:
-                try:
-                    comargs = []
-                    await_inp = ex.needs_input() and inp is None
-                    if not run or ex.ip in breaks or await_inp:
-                        command = input("$ ")
-                        comargs = command.split()
-                    if comargs:
-                        comargs[0] = comargs[0].lower()
-                        if comargs[0] == "breakpoint":
-                            if len(comargs) > 1:
-                                try:
-                                    addr = int(comargs[1])
-                                except ValueError:
-                                    if comargs[1] in ex.symbols:
-                                        addr = ex.symbols[comargs[1]]
-                                    else:
-                                        print("No such symbol")
-                                        continue
-                                breaks.append(addr)
-                                print("Added Breakpoint")
-                        elif comargs[0] == "delpoint":
-                            if len(comargs) > 1:
-                                try:
-                                    addr = int(comargs[1])
-                                except ValueError:
-                                    if comargs[1] in ex.symbols:
-                                        addr = ex.symbols[comargs[1]]
-                                    else:
-                                        print("No such symbol")
-                                        continue
-                                if addr in breaks:
-                                    breaks.remove(addr)
-                                    print("Removed Breakpoint")
-                        elif comargs[0] == "listpoints":
-                            print(", ".join(str(b) for b in breaks))
-                        elif comargs[0] in ("input", "inp", "i"):
-                            if len(comargs) > 1:
-                                inp = comargs[1]
-                        elif comargs[0] == "run":
-                            run = True
-                        elif comargs[0] == "step":
-                            run = False
-                        elif comargs[0] == "reset":
-                            ex.pc = 0
-                            continue
-                        elif comargs[0] == "coredump":
-                            print(" ".join(str(m) for m in ex.memory))
-                    elif not await_inp:
-                        break
-                except (EOFError, KeyboardInterrupt):
-                    print("Halting")
-                    sys.exit(1)
-            if not code:
-                break
-
-    else:
-        while True:
-            if ex.needs_input():
-                try:
-                    code = ex.cycle(inp = int(input()))
-                except (EOFError, ValueError, KeyboardInterrupt):
-                    sys.exit(1)
-            else:
-                code = ex.cycle()
-            if not code: break
-            if code == Exec.OUTPUT:
-                print(ex.outbox)
-
+app.run(host="127.0.0.1", port=10122)

@@ -15,16 +15,39 @@ Response : 200 - Intitial Machine State JSON
 
 ```
 Endpoint: POST /step
-Query   : exec - execution id  
-Response: 200  - Good execution
-          201  - Output
-          202  - Halted
+Query   : exec_id - execution id  
+Response: 200  - Good execution (Body is Program State)
+          201  - Output (Body is Output Value)
+          202  - Halted (Body is Program State)
           404  - No such Exec ID
-          412  - Requiring Input
+          412  - Requiring Input (Body is Program State)
           422  - Bad input
 ```
 
-### Configure
+### Run
+
+```
+Endpoint: POST /run
+Query   : exec_id - execution id  
+Response: 200  - Good execution (Body is Program State)
+          201  - Output (Body is Output Value)
+          202  - Halted (Body is Program State)
+          404  - No such Exec ID
+          412  - Requiring Input (Body is Program State)
+          422  - Bad input
+```
+
+### Input
+
+```
+Endpoint : POST /input
+Query    : exec_id - execution id
+Body     : Input Value
+Response : 200 - OK
+           404 - Bad Exec ID
+```
+
+### Configure (Unimpl!)
 
 ```
 Endpoint : POST /configure  
