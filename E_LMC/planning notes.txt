@@ -28,3 +28,12 @@ For most functions, the first argument is a label. The second argument can be ei
 
 There will be some system constants that the program uses in order to reduce code redundency
 	Denoted by SC_[name]
+
+Some functions will require a loop. Loops will end when the branch to an end of loop location. Each e_o_l will be numbered with a unquie ID starting with E and then being followed by a number (making sure to check it is never used)
+
+user variables can't start with SV
+
+stack for nested loops
+	when a temp var is added, it is added to the stack and the address value it is given will be checked for non-existance
+	
+	SV
