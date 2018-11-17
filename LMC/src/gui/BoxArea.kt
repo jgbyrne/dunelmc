@@ -8,15 +8,23 @@ import java.awt.Graphics2D
 import java.awt.event.MouseWheelEvent
 import java.awt.event.MouseWheelListener
 import java.lang.Math.*
+import javax.swing.JTextArea
 import kotlin.math.roundToInt
 
 class BoxArea(session: Session, start: Vec2, size: Vec2) : Area(session, start, size), MouseWheelListener {
+
     var viewMode: Double = 0.0
+    var scrollOffset: Double = 0.0
+
     private var animationThread: AnimationThread? = null
+    val editor = JTextArea(session.code)
 
     init {
         preferredSize = Dimension(630, 630)
         addMouseWheelListener(this)
+
+        add(editor)
+        editor.setBounds(0, 0, width, height)
 
         layout = null
         session.boxes.forEach {
@@ -38,17 +46,26 @@ class BoxArea(session: Session, start: Vec2, size: Vec2) : Area(session, start, 
 
     override fun mouseWheelMoved(e: MouseWheelEvent) {
 
-        animationThread?.interrupt()
-        val currentTime = System.currentTimeMillis()
-        val nextViewMode = max(0.0, min(2.0, viewMode.roundToInt().toDouble() - e.wheelRotation))
-        animationThread = AnimationThread(
-                this,
-                currentTime,
-                currentTime + 400,
-                viewMode,
-                nextViewMode
-        )
-        animationThread?.start()
+        if (e.isControlDown) {
+
+            animationThread?.interrupt()
+            val currentTime = System.currentTimeMillis()
+            val nextViewMode = max(0.0, min(2.0, viewMode.roundToInt().toDouble() - e.wheelRotation))
+            animationThread = AnimationThread(
+                    this,
+                    currentTime,
+                    currentTime + 400,
+                    viewMode,
+                    nextViewMode
+            )
+            animationThread?.start()
+
+        } else {
+
+            scrollOffset -= e.wheelRotation
+
+        }
+
     }
 
     private class AnimationThread(val mailBoxArea: BoxArea,

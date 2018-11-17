@@ -114,7 +114,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
         ) {
             val label = (if (viewMode.roundToInt() == 2) lineNo else boxNo).toString()
 
-            g.drawStringCentred(label, Vec2(cellSize.x / 2, size.y / 10 * .2) )
+            g.drawStringCentred(label, Vec2(cellSize.x / 2, size.y / 10 * .2))
             g.with(color = Color(color.red, color.green, color.blue, 100)) {
                 g.fill(RoundRectangle2D.Double(
                         0.0,
@@ -126,7 +126,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                 ))
             }
 
-            if (boxNo == session.PC){
+            if (boxNo == session.PC) {
                 g.with(color = RED, stroke = BasicStroke(4f)) {
                     g.draw(RoundRectangle2D.Double(
                             0.0,
@@ -150,6 +150,12 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                     (location.y).toInt(),
                     (cellSize.x).toInt(),
                     (cellSize.y * .8).toInt()
+            )
+            mnemonicLabel.foreground = Color(
+                    mnemonicLabel.foreground.red,
+                    mnemonicLabel.foreground.green,
+                    mnemonicLabel.foreground.blue,
+                    (getMnemonicVisibility(viewMode) * 255).toInt()
             )
         }
     }
