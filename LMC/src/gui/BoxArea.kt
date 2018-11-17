@@ -21,6 +21,7 @@ class BoxArea(session: Session, start: Vec2, size: Vec2) : Area(session, start, 
         layout = null
         session.boxes.forEach {
             add(it.boxValueField)
+            add(it.mnemonicLabel)
         }
 
     }

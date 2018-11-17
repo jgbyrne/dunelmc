@@ -1,6 +1,7 @@
 package core
 
 import utils.Vec2
+import utils.drawStringCentred
 import utils.with
 import java.awt.*
 import java.awt.geom.AffineTransform
@@ -8,6 +9,7 @@ import java.awt.geom.RoundRectangle2D
 import java.lang.Math.ceil
 import java.lang.Math.floor
 import javax.swing.BorderFactory
+import javax.swing.JLabel
 import javax.swing.JTextField
 import kotlin.math.roundToInt
 
@@ -41,6 +43,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
             super.paint(g)
         }
     }
+    val mnemonicLabel = JLabel(instruction.operation.mnemonic, JLabel.CENTER)
 
     init {
 
@@ -86,33 +89,53 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
         }
     }
 
+
+    fun getMnemonicVisibility(viewMode: Double): Double {
+        return if (viewMode % 1.0 == 0.0) {
+            when (viewMode.toInt()) {
+                0 -> 0.0
+                1 -> 1.0
+                2 -> 0.0
+                else -> throw Exception("This is illegal")
+            }
+        } else {
+            val along = viewMode % 1.0
+            getMnemonicVisibility(ceil(viewMode)) * along + getMnemonicVisibility(floor(viewMode)) * (1 - along)
+        }
+    }
+
+
     fun draw(g: Graphics2D, viewMode: Double, size: Vec2) {
         val location = getLocation(viewMode, size)
-        val size = getSize(viewMode, size)
+        val cellSize = getSize(viewMode, size)
         g.with(
                 deltaTransform = AffineTransform.getTranslateInstance(location.x, location.y)
         ) {
             val label = (if (viewMode.roundToInt() == 2) lineNo else boxNo).toString()
-            g.drawString(label, 4, 4 + 12)
+            
+            g.drawStringCentred(label, Vec2(cellSize.x / 2, size.y / 10 * .2) )
             g.with(color = Color(color.red, color.green, color.blue, 100)) {
                 g.fill(RoundRectangle2D.Double(
                         0.0,
                         0.0,
-                        size.x,
-                        size.y,
+                        cellSize.x,
+                        cellSize.y,
                         12.0,
                         12.0
                 ))
             }
-            g.with(color = color) {
+            boxValueField.bounds = Rectangle(
+                    (location.x + 4).toInt(),
+                    (location.y + cellSize.y - size.y / 10 * .6 - 4).toInt(),
+                    (cellSize.x - 8).toInt(),
+                    (size.y / 10 * .6).toInt())
 
-                boxValueField.bounds = Rectangle(
-                        (location.x + 4).toInt(),
-                        (location.y + size.y * .5 - 4).toInt(),
-                        (size.x - 8).toInt(),
-                        (size.y * .5).toInt()
-                )
-            }
+            mnemonicLabel.bounds = Rectangle(
+                    (location.x).toInt(),
+                    (location.y).toInt(),
+                    (cellSize.x).toInt(),
+                    (cellSize.y * .8).toInt()
+            )
         }
     }
 
