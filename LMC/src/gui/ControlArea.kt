@@ -15,12 +15,12 @@ class ControlArea(val session: Session) : JPanel() {
         border = BorderFactory.createEmptyBorder(10, 10, 0, 0)
 //        preferredSize = Dimension(400, 200)
 
-        val ignoreBreakpointButton = CustomButton( "\u00d8", Color.decode("#2196F3"))
-        val stopButton = CustomButton("\u25a1", Color.decode("#F44336"))
+        val ignoreBreakpointButton = CustomButton( "Ø", Color.decode("#2196F3"))
+        val stopButton = CustomButton("□", Color.decode("#F44336"))
         val stepBackwardButton = CustomButton("<-", Color.decode("#4CAF50"))
         val playPauseButton = CustomButton(">", Color.decode("#8BC34A"))
         val stepForwardButton = CustomButton("->", Color.decode("#4CAF50"))
-        val fastForwardButton = CustomButton("\u23E9", Color.decode("#2196F3"))
+        val fastForwardButton = CustomButton("⏩", Color.decode("#2196F3"))
 
         layout = GridBagLayout()
         add(ignoreBreakpointButton)
