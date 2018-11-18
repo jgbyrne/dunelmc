@@ -209,7 +209,7 @@ def compile():
                     "lno" : int(999),
                     "line": "-----"
                     })
-    registers = {"outbox": "000", "inbox": "000", "pc": 0, "ip": 0, "acc": "000", "neg": False}
+    registers = {"outbox": "000", "inbox": "000", "pc": 0, "ip": 0, "acc": "000", "neg": False, "brk":False}
 
     sessions[next_exec] = s
     next_exec += 1

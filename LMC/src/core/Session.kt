@@ -8,7 +8,36 @@ import java.net.URL
 
 class Session(val code: String) {
 
+    var playingThread: PlayingThread? = null
+
+    fun startedPlaying() {
+        if (playing) {
+            playingThread?.interrupt()
+            playingThread = PlayingThread(this)
+            playingThread?.start()
+        }
+    }
+
+    fun stepForward() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun toggleBreakpoints() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun fastForward() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun reset() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     val sessionID: Int
+
+    var ignoreBreakpoints: Boolean = false
+    var playing: Boolean = false
 
     val lines = code.split("\n").mapIndexed { index, s ->
         index to s
@@ -21,9 +50,9 @@ class Session(val code: String) {
     var IP: Int = 0
     var ACC: String = ""
     var NF: Boolean = false
-    val boxes = listOf<MailBox>()
+    val boxes: List<MailBox>
 
-    val lineNumberMap = boxes.associate { it.lineNo to it }
+    val lineNumberMap: Map<Int, MailBox>
 
     init {
 
@@ -38,7 +67,7 @@ class Session(val code: String) {
         out.close()
 
         val code = connection.responseCode
-        if (code == 418) Error("Cancer is happening")
+        if (code == 418) Error("This is a bad error")
 
         val input = DataInputStream(connection.inputStream)
         val result = JSONObject(input.readLine())
@@ -50,27 +79,35 @@ class Session(val code: String) {
         ACC = registers.getString("acc")
         NF = registers.getBoolean("neg")
 
-        val boxes = result.getJSONArray("asm")
-        (0 until boxes.length()).map { boxes.getJSONObject(it) }.forEach {
-            
+        val jsonBoxes = result.getJSONArray("asm")
+        boxes = (0 until jsonBoxes.length()).map { jsonBoxes.getJSONObject(it) }.map {
             MailBox(
                     it.getInt("lno"),
                     it.getInt("addr"),
                     Instruction(it.getInt("data")),
-                    it.getBoolean("brk"))
+                    try {
+                        it.getBoolean("brk")
+                    } catch (e: Exception) {
+                        false
+                    }
+            )
         }
 
-        /*
-        ams
-            addr should be int
-            data should be int
-            lno should be int
-        registers
-            ip should be int
-            pc should be int
-
-
-         */
+        lineNumberMap = boxes.associate { it.lineNo to it }
     }
 
+}
+
+class PlayingThread(val session: Session) : Thread("Playback Thread") {
+    override fun run() {
+        do {
+            try {
+
+                session.stepForward()
+                sleep(1000)
+            } catch (e: InterruptedException) {
+                break
+            }
+        } while (session.playing && !isInterrupted && (session.ignoreBreakpoints || !session.boxes[session.IP].isBreakPoint))
+    }
 }
