@@ -11,7 +11,7 @@ requests.post("http://127.0.0.1:10122/input", params={"exec_id": eid}, data="3")
 
 ctr = 0
 while True:
-    stepr = requests.get("http://127.0.0.1:10122/run", params={"exec_id": eid})
+    stepr = requests.get("http://127.0.0.1:10122/step", params={"exec_id": eid})
     if stepr.status_code != 200:
         if stepr.status_code == 201:
             print(stepr.text)
