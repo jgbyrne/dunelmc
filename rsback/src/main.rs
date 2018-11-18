@@ -463,7 +463,7 @@ struct JRegisters {
 
 #[derive(Serialize)]
 struct JMachine {
-    exec_id: usize,
+    exec_id: u8,
     asm: Vec<JMailbox>,
     registers: JRegisters,
 }
@@ -492,7 +492,7 @@ fn compile(program: Data, sessions: State<Mutex<Vec<Session>>>) -> json::Json<JM
     }
     
     let json = json::Json(JMachine {
-        exec_id: rand::random::<usize>(), 
+        exec_id: rand::random::<u8>(), 
         asm: jmbs,
         registers: JRegisters { pc: exec.pc, ip: exec.ip, neg: exec.neg, acc: format!("{}", &exec.acc),inbox: format!("{}", &exec.inbox), outbox: format!("{}", &exec.outbox) },
     });
