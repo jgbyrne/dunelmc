@@ -1,6 +1,34 @@
 package core
 
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.net.HttpURLConnection
+import java.net.URL
+
 class Session(val code: String) {
+
+    val sessionID:Int
+
+    init {
+
+        val compileURL = URL("http", "localhost", 10122, "/compile")
+        val connection = compileURL.openConnection() as HttpURLConnection
+        connection.requestMethod = "POST"
+        connection.doOutput = true
+
+        val out = DataOutputStream(connection.outputStream)
+        out.write(code.toByteArray())
+        out.flush()
+        out.close()
+
+        val resp = connection.responseCode
+        if (resp == 418) Error("Cancer is happening")
+
+        val input = DataInputStream(connection.inputStream)
+        val result = input.readLine()
+        println(result)
+
+    }
 
     val inputQueue = mutableListOf<String>()
     val outputList = mutableListOf<String>()
