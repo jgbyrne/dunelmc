@@ -30,16 +30,28 @@ class BoxArea(session: Session) : Area(session), MouseWheelListener {
             add(it.boxValueField)
             add(it.mnemonicLabel)
         }
+
+    }
+
+    fun findCurrentHieght(): Double {
+        val size = Vec2(width, height)
+        println(size)
+        return session.boxes.last().let {
+            it.getLocation(viewMode, size, this) + it.getSize(viewMode, size)
+        }.y
+
     }
 
     override fun setBounds(x: Int, y: Int, width: Int, height: Int) {
         super.setBounds(x, y, width, height)
+
 
         val size = Vec2(width, height)
         session.boxes.forEach {
             it.update(viewMode, size, this)
         }
         parent.repaint()
+
     }
 
     override fun setBounds(r: Rectangle?) {
@@ -56,10 +68,13 @@ class BoxArea(session: Session) : Area(session), MouseWheelListener {
         super.paint(g)
         g as? Graphics2D ?: throw  Exception("Cast Failed")
 
+
+
         val size = Vec2(width, height)
         session.boxes.forEach {
             it.draw(g, viewMode, size, this)
         }
+
     }
 
     override fun mouseWheelMoved(e: MouseWheelEvent) {

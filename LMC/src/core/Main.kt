@@ -8,7 +8,7 @@ fun main(args: Array<String>) {
 
     val session = Session("code goes here")
 
-    val frame = JFrame("LMC")
+    val frame = JFrame("DuneLMC")
     frame.contentPane = ContentPane(session)
     frame.defaultCloseOperation = EXIT_ON_CLOSE
     frame.pack()
