@@ -4,8 +4,12 @@ import core.Session
 import utils.Vec2
 import utils.with
 import java.awt.*
+import java.awt.Color.WHITE
+import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
 import java.awt.event.MouseWheelEvent
 import java.awt.event.MouseWheelListener
+import java.awt.geom.AffineTransform
 import java.awt.geom.Rectangle2D
 import java.lang.Math.*
 import javax.swing.JPanel
@@ -13,7 +17,7 @@ import javax.swing.JTextArea
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
+class BoxArea(val session: Session) : JPanel(), MouseWheelListener, MouseListener {
 
     var viewMode: Double = 0.0
 
@@ -22,6 +26,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
         init {
             isEditable = false
         }
+
         override fun repaint() {
             parent?.repaint()
         }
@@ -31,10 +36,15 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
             it.getFontMetrics(it.font)
         }.height
 
+    var scrollOffset: Double = 0.0
+    val trueHeight
+        get() = (630 * getHeightMultiplier()).toInt()
+
     init {
-        size = Dimension(630, 630)
+        preferredSize = Dimension(630, 630)
 
         addMouseWheelListener(this)
+        addMouseListener(this)
 
         add(editor)
         editor.setBounds(MARGIN, 0, width - MARGIN, height)
@@ -50,12 +60,53 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
 
     }
 
+    override fun mouseClicked(e: MouseEvent) {
+        when (viewMode.roundToInt()) {
+            0 -> {
+                val x = (e.x / width.toDouble() * 10).toInt()
+                val y = (e.y / height.toDouble() * 10).toInt()
+                val index = x + 10 * y
+                session.boxes.getOrNull(index)?.isBreakPoint = !session.boxes[index].isBreakPoint
+                repaint()
+            }
+            1 -> {
+
+                val x = (e.x / width.toDouble() * 10).toInt()
+                val y = (e.y / height.toDouble() * 10 / 1.5).toInt()
+                val index = x + 10 * y
+                session.boxes.getOrNull(index)?.isBreakPoint = !session.boxes[index].isBreakPoint
+                repaint()
+            }
+            2 -> {
+                val index = (e.y / this.lineHeight).toInt()
+                session.boxes.getOrNull(index)?.isBreakPoint = !session.boxes[index].isBreakPoint
+                repaint()
+            }
+        }
+    }
+
+
     fun updateEditor(viewMode: Double) {
         editor.foreground = editor.foreground.run {
             Color(red, green, blue, (getEditorVisibility(viewMode) * 255).toInt())
         }
         editor.isVisible = getEditorVisibility(viewMode).roundToInt() != 0
         editor.isEnabled = getEditorVisibility(viewMode).roundToInt() != 0
+
+    }
+
+    private fun getHeightMultiplier(): Double {
+        return if (viewMode % 1.0 == 0.0) {
+            when (viewMode.toInt()) {
+                0 -> 1.0 * ceil(session.boxes.size / 10 / 10.0)
+                1 -> 1.5 * ceil(session.boxes.size / 10 / 10.0)
+                2 -> ceil(630.0 / lineHeight / 10 * session.boxes.size / 100)
+                else -> throw Exception("This is illegal")
+            }
+        } else {
+            val along = viewMode % 1.0
+            getEditorVisibility(ceil(viewMode)) * along + getEditorVisibility(floor(viewMode)) * (1 - along)
+        }
     }
 
     private fun getEditorVisibility(viewMode: Double): Double {
@@ -95,25 +146,34 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
     }
 
     override fun paint(g: Graphics) {
-        super.paint(g)
         g as? Graphics2D ?: throw  Exception("Cast Failed")
-
-        if (viewMode.roundToInt() == 2) {
-            (0 until session.lines.size).forEach {
-                g.with(color = if (it % 2 == 0) Color(180, 180, 180, ((viewMode - 1.5) * 2 * 255).toInt()) else Color(210, 210, 210, ((viewMode - 1.5) * 2 * 255).toInt())) {
-                    if (session.lineNumberMap.containsKey(it)) {
-                        g.fill(Rectangle2D.Double(MARGIN.toDouble(), it * lineHeight.toDouble(), width.toDouble(), lineHeight.toDouble()))
-                    } else {
-                        g.fill(Rectangle2D.Double(0.0, it * lineHeight.toDouble(), width.toDouble(), lineHeight.toDouble()))
-                    }
-                }
-
-            }
+        g.clearRect(0, 0, width, height)
+        g.with(color = WHITE) {
+            g.fillRect(0, 0, width, height)
         }
 
-        val size = Vec2(width, height)
-        session.boxes.forEach {
-            it.draw(g, viewMode, size, this)
+        g.with(deltaTransform = AffineTransform.getTranslateInstance(0.0, scrollOffset)) {
+
+            if (viewMode.roundToInt() == 2) {
+                (0 until session.lines.size).forEach {
+                    g.with(color = if (it % 2 == 0)
+                        Color(180, 180, 180, max(min(((viewMode - 1.5) * 2 * 255).toInt(), 255), 0))
+                    else
+                        Color(210, 210, 210, max(min(((viewMode - 1.5) * 2 * 255).toInt(), 255), 0))) {
+                        if (session.lineNumberMap.containsKey(it)) {
+                            g.fill(Rectangle2D.Double(MARGIN.toDouble(), it * lineHeight.toDouble(), width.toDouble(), lineHeight.toDouble()))
+                        } else {
+                            g.fill(Rectangle2D.Double(0.0, it * lineHeight.toDouble(), width.toDouble(), lineHeight.toDouble()))
+                        }
+                    }
+
+                }
+            }
+
+            val size = Vec2(width, height)
+            session.boxes.forEach {
+                it.draw(g, viewMode, size, this)
+            }
         }
         super.paintChildren(g)
     }
@@ -134,6 +194,14 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
             )
             animationThread?.start()
 
+        } else {
+            scrollOffset += 40 * e.wheelRotation
+            val size = utils.Vec2(width, height)
+            session.boxes.forEach {
+                it.update(viewMode, size, this)
+            }
+            updateEditor(viewMode)
+            parent.parent.repaint()
         }
 
     }
@@ -184,5 +252,10 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
     companion object {
         val MARGIN = 60
     }
+
+    override fun mouseReleased(e: MouseEvent?) {}
+    override fun mouseEntered(e: MouseEvent?) {}
+    override fun mouseExited(e: MouseEvent?) {}
+    override fun mousePressed(e: MouseEvent?) {}
 
 }

@@ -14,7 +14,8 @@ enum class Operations(val mnemonic: String, val opcode: Int, val color: Color, v
     BRP("BRP", 800, Color.decode("#0288d1"), WHITE),
     IN("IN", 901, Color.decode("#9C27B0"), WHITE),
     OUT("OUT", 902, Color.decode("#3F51B5"), WHITE),
-    DAT("DAT", 902, Color.decode("#F44336"), WHITE)
+    DAT("DAT", 902, Color.decode("#F44336"), WHITE),
+    HLT("HLT", 0, Color.decode("#111111"), WHITE)
 
 
 }

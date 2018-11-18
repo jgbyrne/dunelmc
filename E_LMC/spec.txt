@@ -118,6 +118,14 @@ BRA(A,B,label_name)
 			SUB	B
 			BRZ	label_name
 
+BRL(A,B,label_name)
+	Check if A is larger than or equal to B
+	If it is, branch to the label name
+
+			LDA	A
+			SUB	B
+			BRP	label_name
+
 
 
 		

@@ -29,6 +29,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
             background = Color(0, 0, 0, 0)
             font = font.deriveFont(Font.BOLD, font.size + 2f)
             horizontalAlignment = JTextField.CENTER
+            isEditable = false
         }
 
         override fun paint(g: Graphics?) {
@@ -91,6 +92,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
         }
     }
 
+
     private fun getValueFieldSize(viewMode: Double, size: Vec2, boxArea: BoxArea): Vec2 {
         return if (viewMode % 1.0 == 0.0) {
             when (viewMode.toInt()) {
@@ -104,6 +106,36 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
             getValueFieldSize(ceil(viewMode), size, boxArea) * along + getValueFieldSize(floor(viewMode), size, boxArea) * (1 - along)
         }
     }
+
+
+    private fun getBreakPointSize(viewMode: Double, size: Vec2, boxArea: BoxArea): Vec2 {
+        return if (viewMode % 1.0 == 0.0) {
+            when (viewMode.toInt()) {
+                0 -> Vec2(10, 10)
+                1 -> Vec2(10, 10)
+                2 -> Vec2(20, 20)
+                else -> throw Exception("This is illegal")
+            }
+        } else {
+            val along = viewMode % 1.0
+            getBreakPointSize(ceil(viewMode), size, boxArea) * along + getBreakPointSize(floor(viewMode), size, boxArea) * (1 - along)
+        }
+    }
+
+    private fun getBreakPointLocation(viewMode: Double, size: Vec2, boxArea: BoxArea): Vec2 {
+        return if (viewMode % 1.0 == 0.0) {
+            when (viewMode.toInt()) {
+                0 -> Vec2(5, 10)
+                1 -> Vec2(5, 10)
+                2 -> Vec2(0, 0)
+                else -> throw Exception("This is illegal")
+            }
+        } else {
+            val along = viewMode % 1.0
+            getBreakPointLocation(ceil(viewMode), size, boxArea) * along + getBreakPointLocation(floor(viewMode), size, boxArea) * (1 - along)
+        }
+    }
+
 
     private fun getValueFieldLocation(viewMode: Double, size: Vec2, boxArea: BoxArea): Vec2 {
         val location = getLocation(viewMode, size, boxArea)
@@ -161,10 +193,15 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                 ))
             }
 
-            if (isBreakPoint && viewMode.roundToInt() == 2) {
-                g.with(color = Color(255, 0, 0, ((viewMode - 1.5) * 2 * 255).toInt())) {
-
-                    g.fill(Ellipse2D.Double(0.0, 0.0, 20.0, 20.0))
+            if (isBreakPoint && !boxArea.session.ignoreBreakpoints) {
+                val BRlocation = getBreakPointLocation(viewMode, size, boxArea)
+                val BRsize = getBreakPointSize(viewMode, size, boxArea)
+                g.with(color = Color(
+                        255,
+                        0,
+                        0
+                ), deltaTransform = AffineTransform.getTranslateInstance(BRlocation.x, BRlocation.y)) {
+                    g.fill(Ellipse2D.Double(0.0, 0.0, BRsize.x, BRsize.y))
                 }
             }
 
@@ -212,15 +249,14 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
         val valueFieldLocation = getValueFieldLocation(viewMode, size, boxArea)
         boxValueField.bounds = Rectangle(
                 valueFieldLocation.x.toInt(),
-                valueFieldLocation.y.toInt(),
-                valueFieldSize.x.toInt(), //(cellSize.x - 8).toInt(),
-                valueFieldSize.y.toInt())//(size.y / 10 * .6).toInt())
+                (valueFieldLocation.y + boxArea.scrollOffset).toInt(),
+                valueFieldSize.x.toInt(),
+                valueFieldSize.y.toInt())
 
-        boxValueField.isEditable = viewMode.roundToInt() != 2
         boxValueField.text = if (viewMode.roundToInt() != 2) instruction.toString() else lineNo.toString()
         mnemonicLabel.bounds = Rectangle(
                 (location.x).toInt(),
-                (location.y).toInt(),
+                (location.y + boxArea.scrollOffset).toInt(),
                 (cellSize.x).toInt(),
                 (cellSize.y * .8).toInt()
         )

@@ -162,7 +162,7 @@ if __name__ == "__main__":
 
                 loop_count += 1
 
-            elif instruction == "WHI":
+            elif instruction == "WHS":
                 bra_vars = b[0][4:-1].split(",")
                 jump = "JTP(" + bra_vars[2] + ")"
                 if jump not in text:
@@ -172,6 +172,17 @@ if __name__ == "__main__":
                     output += "\tLDA\t" + bra_vars[0] + "\n"
                     output += "\tSUB\t" + bra_vars[1] + "\n"
                     output += "\tBRZ\t" + bra_vars[2] + "\n"
+
+            elif instruction == "WHL":
+                bra_vars = b[0][4:-1].split(",")
+                jump = "JTP(" + bra_vars[2] + ")"
+                if jump not in text:
+                    print("Branch to jump point has not been decleared")
+                    break
+                else:
+                    output += "\tLDA\t" + bra_vars[0] + "\n"
+                    output += "\tSUB\t" + bra_vars[1] + "\n"
+                    output += "\tBRP\t" + bra_vars[2] + "\n"
 
                 
                     
