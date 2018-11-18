@@ -6,11 +6,12 @@ import java.awt.*
 import java.awt.event.MouseWheelEvent
 import java.awt.event.MouseWheelListener
 import java.lang.Math.*
+import javax.swing.JPanel
 import javax.swing.JTextArea
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-class BoxArea(session: Session) : Area(session), MouseWheelListener {
+class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
 
     var viewMode: Double = 0.0
     var scrollOffset: Double = 0.0
@@ -67,8 +68,6 @@ class BoxArea(session: Session) : Area(session), MouseWheelListener {
     override fun paint(g: Graphics) {
         super.paint(g)
         g as? Graphics2D ?: throw  Exception("Cast Failed")
-
-
 
         val size = Vec2(width, height)
         session.boxes.forEach {

@@ -3,21 +3,24 @@ package gui
 import core.Session
 import utils.Vec2
 import java.awt.*
+import javax.swing.BorderFactory
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 
 class ContentPane(val session: Session) : JPanel() {
     init {
 
+        border = BorderFactory.createEmptyBorder(10,10,10,10)
+
         val mailBoxArea = BoxArea(session)
         val registerArea = RegisterArea(session)
         val controlArea = ControlArea(session)
         val consoleArea = ConsoleArea(session)
 
-        val rightSide = JPanel(GridLayout(3, 1, 10, 10))
-        rightSide.add(consoleArea)
-        rightSide.add(registerArea)
-        rightSide.add(controlArea)
+        val rightSide = JPanel(BorderLayout())
+        rightSide.add(consoleArea, BorderLayout.NORTH)
+        rightSide.add(registerArea, BorderLayout.CENTER)
+        rightSide.add(controlArea, BorderLayout.SOUTH)
 
         layout = BorderLayout()
         add(rightSide, BorderLayout.EAST)

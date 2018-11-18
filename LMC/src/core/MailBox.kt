@@ -167,7 +167,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
     }
 
     companion object {
-        const val ROUNDNESS = 12.0
+        public const val ROUNDNESS = 12.0
     }
 
 }
