@@ -456,6 +456,7 @@ struct JRegisters {
     pc: usize,
     ip: usize,
     neg: bool,
+    acc: String,
     inbox: String,
     outbox: String,
 }
@@ -493,7 +494,7 @@ fn compile(program: Data, sessions: State<Mutex<Vec<Session>>>) -> json::Json<JM
     let json = json::Json(JMachine {
         exec_id: rand::random::<usize>(), 
         asm: jmbs,
-        registers: JRegisters { pc: exec.pc, ip: exec.ip, neg: exec.neg, inbox: format!("{}", &exec.inbox), outbox: format!("{}", &exec.outbox) },
+        registers: JRegisters { pc: exec.pc, ip: exec.ip, neg: exec.neg, acc: format!("{}", &exec.acc),inbox: format!("{}", &exec.inbox), outbox: format!("{}", &exec.outbox) },
     });
     
     let session = Session { exec, inp: 1000 };
