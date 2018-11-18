@@ -1,8 +1,7 @@
 package gui
 
 import core.Session
-import utils.Vec2
-import java.awt.Dimension
+import java.awt.Font
 import java.awt.GridLayout
 import javax.swing.*
 
@@ -15,6 +14,7 @@ class ConsoleArea(val session: Session) : JPanel(GridLayout(1, 1)) {
                 this.maximumSize = this.preferredSize
             }
         }
+        textArea.font = Font(Font.MONOSPACED, 0, 16)
         add(JScrollPane(textArea).also { it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS })
     }
 }

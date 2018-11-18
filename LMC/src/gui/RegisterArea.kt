@@ -3,12 +3,10 @@ package gui
 import core.MailBox.Companion.ROUNDNESS
 import core.Operations
 import core.Session
-import utils.Vec2
 import utils.with
 import java.awt.*
 import java.awt.geom.RoundRectangle2D
 import javax.swing.*
-import javax.swing.border.Border
 
 class RegisterArea(val session: Session) : JPanel(BorderLayout()) {
 

@@ -50,7 +50,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
 
     }
 
-    fun getLocation(viewMode: Double, size: Vec2, area: BoxArea): Vec2 {
+    private fun getLocation(viewMode: Double, size: Vec2, area: BoxArea): Vec2 {
         return if (viewMode % 1.0 == 0.0) {
             when (viewMode.toInt()) {
                 0 -> {
@@ -60,7 +60,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                     Vec2(boxNo % 10 * size.x / 10, boxNo / 10 * size.y / 10 * 1.5)
                 }
                 2 -> {
-                    Vec2(0, lineNo * size.y / 10)
+                    Vec2(0, area.editor.let { it.getFontMetrics(it.font) }.height * lineNo)
                 }
                 else -> throw Exception("This is illegal")
             }
@@ -70,7 +70,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
         } + Vec2(0, area.scrollOffset * 40)
     }
 
-    fun getSize(viewMode: Double, size: Vec2): Vec2 {
+    private fun getSize(viewMode: Double, size: Vec2, area: BoxArea): Vec2 {
         return if (viewMode % 1.0 == 0.0) {
             when (viewMode.toInt()) {
                 0 -> {
@@ -80,18 +80,17 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                     Vec2(size.x / 10, size.y / 10 * 1.5)
                 }
                 2 -> {
-                    Vec2(size.x, size.y / 10)
+                    Vec2(size.x, area.editor.font.size)
                 }
                 else -> throw Exception("This is illegal")
             }
         } else {
             val along = viewMode % 1.0
-            getSize(ceil(viewMode), size) * along + getSize(floor(viewMode), size) * (1 - along)
+            getSize(ceil(viewMode), size, area) * along + getSize(floor(viewMode), size, area) * (1 - along)
         }
     }
 
-
-    fun getMnemonicVisibility(viewMode: Double): Double {
+    private fun getMnemonicVisibility(viewMode: Double): Double {
         return if (viewMode % 1.0 == 0.0) {
             when (viewMode.toInt()) {
                 0 -> 0.0
@@ -108,7 +107,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
 
     fun draw(g: Graphics2D, viewMode: Double, size: Vec2, boxArea: BoxArea) {
         val location = getLocation(viewMode, size, boxArea)
-        val cellSize = getSize(viewMode, size)
+        val cellSize = getSize(viewMode, size, boxArea)
 
         g.with(
                 deltaTransform = AffineTransform.getTranslateInstance(location.x, location.y)
@@ -144,7 +143,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
 
     fun update(viewMode: Double, size: Vec2, boxArea: BoxArea) {
         val location = getLocation(viewMode, size, boxArea)
-        val cellSize = getSize(viewMode, size)
+        val cellSize = getSize(viewMode, size, boxArea)
 
         boxValueField.bounds = Rectangle(
                 (location.x + 4).toInt(),
@@ -167,7 +166,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
     }
 
     companion object {
-        public const val ROUNDNESS = 12.0
+        const val ROUNDNESS = 12.0
     }
 
 }

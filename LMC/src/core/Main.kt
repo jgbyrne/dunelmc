@@ -6,7 +6,19 @@ import javax.swing.WindowConstants.EXIT_ON_CLOSE
 
 fun main(args: Array<String>) {
 
-    val session = Session("code goes here")
+    val session = Session("code goes here\nsome more lines\nsome more lines\nsome more lines\nsome more lines\n" +
+            "some more lines\n" +
+            "some more lines\n" +
+            "some more lines\n" +
+            "some more lines\n" +
+            "some more lines\n" +
+            "some more lines\n" +
+            "some more lines\n" +
+            "some more lines\n" +
+            "some more lines\n" +
+            "some more lines\n" +
+            "some more lines\n" +
+            "some more lines")
 
     val frame = JFrame("DuneLMC")
     frame.contentPane = ContentPane(session)

@@ -2,14 +2,12 @@ package gui
 
 import core.MailBox.Companion.ROUNDNESS
 import core.Session
-import utils.Vec2
 import utils.with
 import java.awt.*
 import java.awt.geom.RoundRectangle2D
 import javax.swing.BorderFactory
 import javax.swing.JButton
 import javax.swing.JPanel
-import javax.swing.border.Border
 
 class ControlArea(val session: Session) : JPanel() {
     init {

@@ -1,7 +1,6 @@
 package gui
 
 import core.Session
-import utils.Vec2
 import java.awt.*
 import javax.swing.BorderFactory
 import javax.swing.JPanel
@@ -28,7 +27,7 @@ class ContentPane(val session: Session) : JPanel() {
         layout = BorderLayout()
         add(rightSide, BorderLayout.EAST)
         val scrollArea = JScrollPane(mailBoxArea)
-        scrollArea.preferredSize = Dimension(630, 630)
+        scrollArea.preferredSize = Dimension(650, 650)
         add(scrollArea, BorderLayout.CENTER)
 
     }

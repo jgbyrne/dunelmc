@@ -20,12 +20,15 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
     val editor = JTextArea(session.code)
 
     init {
-        preferredSize = Dimension(PREF_WIDTH, MIN_HEIGHT)
+        size = Dimension(630, 630)
 
         addMouseWheelListener(this)
 
         add(editor)
         editor.setBounds(0, 0, width, height)
+        editor.background = Color(0, 0, 0, 0)
+        editor.font = Font(Font.MONOSPACED, 0, 20)
+        updateEditor(viewMode)
 
         layout = null
         session.boxes.forEach {
@@ -33,6 +36,28 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
             add(it.mnemonicLabel)
         }
 
+    }
+
+    fun updateEditor(viewMode: Double) {
+        editor.foreground = editor.foreground.run {
+            Color(red, green, blue, (getEditorVisibility(viewMode) * 255).toInt())
+        }
+        editor.isVisible = getEditorVisibility(viewMode).roundToInt() != 0
+        editor.isEnabled = getEditorVisibility(viewMode).roundToInt() != 0
+    }
+
+    fun getEditorVisibility(viewMode: Double): Double {
+        return if (viewMode % 1.0 == 0.0) {
+            when (viewMode.toInt()) {
+                0 -> 0.0
+                1 -> 0.0
+                2 -> 1.0
+                else -> throw Exception("This is illegal")
+            }
+        } else {
+            val along = viewMode % 1.0
+            getEditorVisibility(ceil(viewMode)) * along + getEditorVisibility(floor(viewMode)) * (1 - along)
+        }
     }
 
     override fun setBounds(x: Int, y: Int, width: Int, height: Int) {
@@ -43,7 +68,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
         session.boxes.forEach {
             it.update(viewMode, size, this)
         }
-        parent.repaint()
+        parent?.repaint()
 
     }
 
@@ -108,6 +133,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
                     session.boxes.forEach {
                         it.update(viewMode, size, this)
                     }
+                    updateEditor(viewMode)
                 }
                 mailBoxArea.repaint()
 
