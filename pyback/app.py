@@ -302,7 +302,7 @@ def run():
                     "line": "-----"
                     })
 
-            registers = {"outbox": "{:03d}".format(ex.outbox), "inbox": "{:03d}".format(ex.inbox), "pc": ex.pc, "ip": ex.ip, "acc": "{:03d}".format(ex.acc), "neg": ex.neg}
+        registers = {"outbox": "{:03d}".format(ex.outbox), "inbox": "{:03d}".format(ex.inbox), "pc": ex.pc, "ip": ex.ip, "acc": "{:03d}".format(ex.acc), "neg": ex.neg}
 
     print(registers)
 
@@ -313,4 +313,4 @@ def run():
     else:
         return (json.dumps({"exec_id" : exec_id, "asm" : asm, "labels": sessions[exec_id].asm.symbols, "registers": registers}), 200, {})
 
-app.run(host="172.20.10.7", port=80)#10122)
+app.run(host="127.0.0.1", port=10122)
