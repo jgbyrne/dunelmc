@@ -1,8 +1,24 @@
+#![feature(proc_macro_hygiene, decl_macro, custom_attribute)]
+
+#[macro_use] extern crate rocket;
+extern crate rocket_contrib;
+#[macro_use] extern crate serde_derive;
+extern crate serde_json;
+
+extern crate rand;
+
+
+use rocket::Data;
+use rocket::State;
+use rocket_contrib::json;
+
 use std::io;
 use std::io::BufRead;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
+
+use std::sync::Mutex;
 
 static B32 : [char; 32] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V'];
 
@@ -119,11 +135,11 @@ impl Assembler {
                 Some(v) => {
                     if lookup(op.unwrap(), lno).unwrap() == 0 {
                         match v.parse::<usize>() {
-                            Ok(dat) => { let mut mb = &self.mem[self.ptr];
-                                         match mb {
-                                             Mailbox::STANDARD { mut dat, .. } => { dat = dat },
-                                             Mailbox::OVERFLOW { .. } => { },
-                                         }
+                            Ok(dv) => { let mb = match &self.mem[self.ptr] {
+                                             Mailbox::STANDARD { dat, lno } => { Mailbox::STANDARD { dat: dv, lno: *lno} },
+                                             Mailbox::OVERFLOW { .. } => { unreachable!() },
+                                         };
+                                         self.mem[self.ptr] = mb;
                                        }
                             Err(_)  => { return Err(AsmError { message: format!("Bad Numeric: {}", v), lno } ); },
                         }
@@ -135,11 +151,11 @@ impl Assembler {
                                 // Handle overflow
                             }
                             else {
-                                let mut mb = &self.mem[self.ptr];
-                                match mb {
-                                    Mailbox::STANDARD { mut dat, .. } => { dat += lptr; },
-                                    Mailbox::OVERFLOW { .. } => { },
-                                }
+                                let mb = match &self.mem[self.ptr] {
+                                    Mailbox::STANDARD { dat, lno } => { Mailbox::STANDARD {dat: dat+lptr, lno: *lno } },
+                                    Mailbox::OVERFLOW { .. } => { unreachable!() },
+                                };
+                                self.mem[self.ptr] = mb;
                             }
                         }
                         else {
@@ -158,10 +174,11 @@ impl Assembler {
             if !self.labels.contains_key(lnval) {
                 return Err(AsmError { message: "Bad Link Value".to_string(), lno: 0 });
             }
-            match &self.mem[*lnptr] {
-                Mailbox::STANDARD { mut dat, .. } => { dat += self.labels.get(lnval).unwrap(); },
-                Mailbox::OVERFLOW { .. } => { },
-            }
+            let mb = match &self.mem[*lnptr] {
+                Mailbox::STANDARD { dat, lno } => { Mailbox::STANDARD {dat: dat+self.labels.get(lnval).unwrap(), lno: *lno } },
+                Mailbox::OVERFLOW { .. } => { unreachable!() },
+            };
+            self.mem[*lnptr] = mb;
         }
 
         Ok(())
@@ -229,11 +246,22 @@ struct Interpreter {
     inbox : usize,
 
     mem : Vec<Mailbox>,
-    lines: Vec<String>,
 }
 
 impl Interpreter {
-    fn create(mem: Vec<Mailbox>, lines: Vec<String>) -> Interpreter {
+    fn blank() -> Interpreter {
+        Interpreter {
+            ip : 0,
+            pc : 0,
+            acc: 0,
+            neg: false,
+            outbox: 0,
+            inbox: 0,
+            mem: vec![],
+        }
+    }
+    
+    fn create(mem: Vec<Mailbox>) -> Interpreter {
         Interpreter {
             ip: 0,
             pc: 0,
@@ -242,7 +270,6 @@ impl Interpreter {
             outbox: 0,
             inbox: 0,
             mem: mem,
-            lines: lines,
         }
     }
 
@@ -402,38 +429,90 @@ impl Interpreter {
     }
 }
 
+struct Session {
+    exec : Interpreter,
+    inp  : usize,
+}
+
+impl Session {
+    fn create() -> Session {
+        Session {
+            exec: Interpreter::blank(),
+            inp : 1000,
+        }
+    }
+}
+
+#[derive(Serialize)]
+struct JMailbox {
+    addr: usize,
+    data: usize,
+    lno : usize,
+    line: String,
+}
+
+#[derive(Serialize)]
+struct JRegisters {
+    pc: usize,
+    ip: usize,
+    neg: bool,
+    inbox: String,
+    outbox: String,
+}
+
+#[derive(Serialize)]
+struct JMachine {
+    exec_id: usize,
+    asm: Vec<JMailbox>,
+    registers: JRegisters,
+}
+
+#[post("/compile", data = "<program>")]
+fn compile(program: Data, sessions: State<Mutex<Vec<Session>>>) -> json::Json<JMachine> {
+    let mut buf = String::new();
+    program.open().read_to_string(&mut buf);
+    let mut asm = Assembler::create();
+    asm.assemble(buf.split("\n").collect());
+    let mut exec = Interpreter::create(asm.mem);
+    
+    let mut jmbs: Vec<JMailbox> = vec![];
+
+    for (i, mb) in exec.mem.iter().enumerate() {
+        let lno = match mb {
+            Mailbox::STANDARD { lno, .. } => *lno,
+            Mailbox::OVERFLOW { lno, .. } => *lno,
+        };
+        let dat = match mb {
+            Mailbox::STANDARD { dat, .. } => *dat,
+            _ => { unreachable!(); },
+        };
+
+        jmbs.push(JMailbox { addr: i, data: dat, lno: lno, line: String::new() });
+    }
+    
+    let json = json::Json(JMachine {
+        exec_id: rand::random::<usize>(), 
+        asm: jmbs,
+        registers: JRegisters { pc: exec.pc, ip: exec.ip, neg: exec.neg, inbox: format!("{}", &exec.inbox), outbox: format!("{}", &exec.outbox) },
+    });
+    
+    let session = Session { exec, inp: 1000 };
+    let mut svec = sessions.lock().unwrap();
+    svec.push(session);
+
+    json
+}
 
 fn main() {
-    //let prog1 = [901, 389, 504, 656, 605, 584, 385, 589, 386, 594, 387, 513, 670, 614, 588, 385, 593, 387, 520, 674, 621, 586, 184, 389, 526, 656, 627, 555, 387, 589, 284, 833, 643, 389, 587, 194, 387, 586, 190, 386, 285, 763, 629, 589, 285, 847, 652, 389, 587, 193, 387, 643, 587, 189, 902, 0, 378, 901, 388, 385, 386, 291, 865];
-    
-    //595
-        
-    //let prog2 = [654, 292, 863, 590, 387, 671, 378, 555, 384, 675, 378, 586, 287, 879, 600, 386, 584, 185, 384, 875, 0, 0, 0, 0, 0, 0, 1, 2, 9, 10, 100, 999, 0, 0, 0, 0];
-    
+    rocket::ignite().manage(Mutex::new(Vec::<Session>::new())).mount("/", routes![compile]).launch();
+
+    /*
     let mut asmblr = Assembler::create();
-    
-    let mut file = File::open("/home/jgb/prog.lmc").unwrap();
     let mut contents = String::new();
     file.read_to_string(&mut contents);
     println!("{:?}", asmblr.assemble(contents.split("\n").collect()));
-
     println!("{:?}", &asmblr.mem);
-
     let mut program : Vec<Mailbox> = asmblr.mem;
-
-    //for dat in prog1.iter() {
-    //    program.push(Mailbox::STANDARD { dat : *dat as usize, lno: 0 });
-    //}
-
-    //program.push(Mailbox::OVERFLOW { sig: 5, duo: "A0".to_string(), lno: 0 });
-
-    //for dat in prog2.iter() {
-    //    program.push(Mailbox::STANDARD { dat : *dat as usize, lno: 0 });
-    //}
-
-    //program.push(Mailbox::STANDARD { dat : 999, lno : 0 });
-
-
     let mut interp = Interpreter::create(program, vec![]);
     loop {
         let result = if interp.needs_input() {
@@ -453,4 +532,5 @@ fn main() {
             _ => {},
         }
     }
+    */
 }
