@@ -3,6 +3,9 @@ import sys
 import argparse
 import re
 
+import socket
+import requests
+
 SINGLE_RE = re.compile("([A-Z]{3}\([A-Za-z]*\))")
 LABEL_RE  = re.compile("([A-Z]{3}\([A-Za-z]*(\,[A-Za-z]+)+\))")
 NUM_RE    = re.compile("([A-Z]{3}\([A-Za-z]*(\,[0-9]+)+\))")
@@ -33,11 +36,11 @@ if __name__ == "__main__":
         exit(-1)
 
     text = text.replace("\t", "").replace("\n", "").replace(" ", "")
-    print("text")
-    print(text)
+##    print("text")
+##    print(text)
 
     commands = text.split(";")[:-1]
-    print(commands)
+##    print(commands)
 
     init_dict = {}
     s_vars = {}
@@ -56,9 +59,9 @@ if __name__ == "__main__":
         c = re.match(NUM_RE,    command)
         d = re.match(BRANCH_RE, command)
 
-        print(command)
+##        print(command)
         if a:
-            print("I/O")
+##            print("I/O")
             instruction = a[0][:3]
             if instruction == "INP":
 ##                print("input")
@@ -80,7 +83,7 @@ if __name__ == "__main__":
 
                 
         elif b: # label
-            print("label")
+##            print("label")
             instruction = b[0][:3]
             if instruction == "MOV":
                 mov_vars = b[0][4:-1].split(",")
@@ -110,23 +113,6 @@ if __name__ == "__main__":
                     s_vars["SC0"] = "0"
                 if "SC1" not in s_vars:
                     s_vars["SC1"] = "1"
-
-
-                ############################################    
-##                temp_vars.append("SV_TEMP" + str(len(temp_vars)))
-##                temp_vars.append("SV_TEMP" + str(len(temp_vars)))
-##                
-##                if len(temp_vars) > max_tvars:
-##                    max_tvars = len(temp_vars)
-##                    
-##                output += "\tLDA\t" + mul_vars[0] + "\n"
-##                output += "\tSTO\t" + temp_vars[-2] + "\n"
-##
-##                output += "\tLDA\tSC0\n"
-##                output += "\tSTO\t" + temp_vars[-1] + "\n"
-##
-##                output += "start"+str(loop_count) + "\tBRZ\t" + "end" + str(loop_count)
-                ###########################################
 
                 temp_var1 = next_system_var(0)
                 temp_var2 = next_system_var(0)
@@ -190,7 +176,7 @@ if __name__ == "__main__":
                 
                     
         elif c: # number
-            print("number")
+##            print("number")
             instruction = c[0][:3]
             if instruction == "MOV":
                 mov_vars = c[0][4:-1].split(",")
@@ -290,12 +276,21 @@ if __name__ == "__main__":
         output += v + "\tDAT\t" + init_dict[v] + "\n"
     for v in s_vars:
         output += v + "\tDAT\t" + str(s_vars[v]) + "\n"
-    print(output)
-    
-    print(text)
 
+resp = requests.post("http://127.0.0.1:10122/compile", params={}, data=output)
+eid = resp.json()["exec_id"]
 
+requests.post("http://127.0.0.1:10122/input", params={"exec_id": eid}, data="5")
 
+ctr = 0
+while True:
+    stepr = requests.get("http://127.0.0.1:10122/run", params={"exec_id": eid})
+    if stepr.status_code != 200:
+        if stepr.status_code == 201:
+            print(stepr.text)
+        else:
+            break
+    ctr += 1
 
 """
 TO-DO
