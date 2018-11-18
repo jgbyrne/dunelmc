@@ -15,7 +15,7 @@ class RegisterArea(val session: Session) : JPanel(BorderLayout()) {
 
     val accLabel: JLabel
     val pcLabel: JLabel
-    val piLabel: JLabel
+    val ipLabel: JLabel
     val nfLabel: JLabel
 
     init {
@@ -61,7 +61,12 @@ class RegisterArea(val session: Session) : JPanel(BorderLayout()) {
             }
         }
         inputField.addActionListener {
-
+            val string = inputField.text
+            if(string.toIntOrNull() != null){
+                session.inputQueue.add((string.toInt() % 1000).toString())
+            }
+            inputField.text = ""
+            update()
         }
         inputField.horizontalAlignment = JTextField.CENTER
         inputField.background = Color(0, 0, 0, 0)
@@ -111,7 +116,7 @@ class RegisterArea(val session: Session) : JPanel(BorderLayout()) {
 
         accLabel = JLabel("000")
         pcLabel = JLabel("000")
-        piLabel = JLabel("000")
+        ipLabel = JLabel("000")
         nfLabel = JLabel("NF").also { it.foreground = Color.RED }
 
         val accPanel = object : JPanel(GridLayout(1, 2)) {
@@ -160,7 +165,7 @@ class RegisterArea(val session: Session) : JPanel(BorderLayout()) {
         pcPanel.add(JLabel("PC:", JLabel.RIGHT), BorderLayout.WEST)
         pcPanel.add(pcLabel, BorderLayout.EAST)
 
-        val piPanel = object : JPanel(GridLayout(1, 2)) {
+        val ipPanel = object : JPanel(GridLayout(1, 2)) {
             override fun paintComponent(g: Graphics?) {
                 g as Graphics2D
                 g.with(color = Color.decode("#F44336")) {
@@ -176,21 +181,44 @@ class RegisterArea(val session: Session) : JPanel(BorderLayout()) {
                 super.paintComponent(g)
             }
         }
-        piPanel.background = Color(0, 0, 0, 0)
-        piPanel.border = BorderFactory.createEmptyBorder(6, 6, 6, 6)
-        piPanel.add(JLabel("PI:", JLabel.RIGHT), BorderLayout.WEST)
-        piPanel.add(piLabel, BorderLayout.EAST)
+        ipPanel.background = Color(0, 0, 0, 0)
+        ipPanel.border = BorderFactory.createEmptyBorder(6, 6, 6, 6)
+        ipPanel.add(JLabel("IP:", JLabel.RIGHT), BorderLayout.WEST)
+        ipPanel.add(ipLabel, BorderLayout.EAST)
 
         val right = JPanel(GridLayout(3, 1, 5, 5))
         right.preferredSize = Dimension(100, 130)
 
         right.add(accPanel)
         right.add(pcPanel)
-        right.add(piPanel)
+        right.add(ipPanel)
 
         layout = GridLayout(1, 2)
         add(left)
         add(right)
+
+        update()
+
+    }
+
+    fun update() {
+        accLabel.text = session.ACC
+        pcLabel.text = session.PC.toString()
+        ipLabel.text = session.IP.toString()
+        nfLabel.text = if (session.NF) "NF" else ""
+
+        (inList.model as DefaultListModel<String>).run {
+            clear()
+            session.inputQueue.forEach {
+                addElement(it)
+            }
+        }
+        (outList.model as DefaultListModel<String>).run {
+            clear()
+            session.outputList.forEach {
+                addElement(it)
+            }
+        }
 
     }
 }

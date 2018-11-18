@@ -1,5 +1,6 @@
 package core
 
+import org.json.JSONObject
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.net.HttpURLConnection
@@ -7,7 +8,51 @@ import java.net.URL
 
 class Session(val code: String) {
 
-    val sessionID:Int
+    var playingThread: PlayingThread? = null
+
+    fun startedPlaying() {
+        if (playing) {
+            playingThread?.interrupt()
+            playingThread = PlayingThread(this)
+            playingThread?.start()
+        }
+    }
+
+    fun stepForward() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun toggleBreakpoints() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun fastForward() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun reset() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    val sessionID: Int
+
+    var ignoreBreakpoints: Boolean = false
+    var playing: Boolean = false
+
+    val lines = code.split("\n").mapIndexed { index, s ->
+        index to s
+    }.associate { it }
+
+    val inputQueue = mutableListOf<String>()
+    val outputList = mutableListOf<String>()
+
+    var PC: Int = 0
+    var IP: Int = 0
+    var ACC: String = ""
+    var NF: Boolean = false
+    val boxes: List<MailBox>
+
+    val lineNumberMap: Map<Int, MailBox>
 
     init {
 
@@ -21,28 +66,48 @@ class Session(val code: String) {
         out.flush()
         out.close()
 
-        val resp = connection.responseCode
-        if (resp == 418) Error("Cancer is happening")
+        val code = connection.responseCode
+        if (code == 418) Error("This is a bad error")
 
         val input = DataInputStream(connection.inputStream)
-        val result = input.readLine()
-        println(result)
+        val result = JSONObject(input.readLine())
+        sessionID = result.getInt("exec_id")
 
+        val registers = result.getJSONObject("registers")
+        PC = registers.getInt("pc")
+        IP = registers.getInt("ip")
+        ACC = registers.getString("acc")
+        NF = registers.getBoolean("neg")
+
+        val jsonBoxes = result.getJSONArray("asm")
+        boxes = (0 until jsonBoxes.length()).map { jsonBoxes.getJSONObject(it) }.map {
+            MailBox(
+                    it.getInt("lno"),
+                    it.getInt("addr"),
+                    Instruction(it.getInt("data")),
+                    try {
+                        it.getBoolean("brk")
+                    } catch (e: Exception) {
+                        false
+                    }
+            )
+        }
+
+        lineNumberMap = boxes.associate { it.lineNo to it }
     }
 
-    val inputQueue = mutableListOf<String>()
-    val outputList = mutableListOf<String>()
+}
 
-    var IR: Int = 0
-    var PC: Int = 0
-    var ACC: Int = 0
-    var NF: Boolean = false
+class PlayingThread(val session: Session) : Thread("Playback Thread") {
+    override fun run() {
+        do {
+            try {
 
-    val lines = code.split("\n").mapIndexed { index, s ->
-        index to s
-    }.associate { it }
-
-    val boxes = listOf<MailBox>()
-    val lineNumberMap = boxes.associate { it.lineNo to it }
-
+                session.stepForward()
+                sleep(1000)
+            } catch (e: InterruptedException) {
+                break
+            }
+        } while (session.playing && !isInterrupted && (session.ignoreBreakpoints || !session.boxes[session.IP].isBreakPoint))
+    }
 }
