@@ -10,28 +10,55 @@ class Session(val code: String) {
 
     var playingThread: PlayingThread? = null
 
-    fun startedPlaying() {
+    fun startedPlaying(function: () -> Unit) {
         if (playing) {
             playingThread?.interrupt()
-            playingThread = PlayingThread(this)
+            playingThread = PlayingThread(this, function)
             playingThread?.start()
         }
     }
 
     fun stepForward() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val compileURL = URL("http", "localhost", 10122, "/step")
+        val connection = compileURL.openConnection() as HttpURLConnection
+        connection.requestMethod = "POST"
+        connection.doOutput = true
+
+        val out = DataOutputStream(connection.outputStream)
+        out.writeInt(sessionID)
+        out.flush()
+        out.close()
+
+        val code = connection.responseCode
+        if (code == 418) Error("This is a bad error")
+
+        val input = DataInputStream(connection.inputStream)
+        val result = JSONObject(input.readLine())
+
+        val registers = result.getJSONObject("registers")
+        PC = registers.getInt("pc")
+        IP = registers.getInt("ip")
+        ACC = registers.getString("acc")
+        NF = registers.getBoolean("neg")
+
+        val jsonBoxes = result.getJSONArray("asm")
+        (0 until jsonBoxes.length()).forEach {
+            boxes[it].instruction.opcode = jsonBoxes.getJSONObject(it).getInt("data")
+        }
+
+
     }
 
     fun toggleBreakpoints() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     fun fastForward() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     fun reset() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     val sessionID: Int
@@ -98,13 +125,13 @@ class Session(val code: String) {
 
 }
 
-class PlayingThread(val session: Session) : Thread("Playback Thread") {
+class PlayingThread(val session: Session, val function: () -> Unit) : Thread("Playback Thread") {
     override fun run() {
         do {
             try {
-
                 session.stepForward()
-                sleep(1000)
+                function.invoke()
+                sleep(500)
             } catch (e: InterruptedException) {
                 break
             }
