@@ -287,6 +287,8 @@ if __name__ == "__main__":
         output += v + "\tDAT\t" + init_dict[v] + "\n"
     for v in s_vars:
         output += v + "\tDAT\t" + str(s_vars[v]) + "\n"
+        
+    print(output)
 
 resp = requests.post("http://127.0.0.1:10122/compile", params={}, data=output)
 eid = resp.json()["exec_id"]
