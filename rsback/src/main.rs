@@ -10,6 +10,7 @@ extern crate rand;
 
 use rocket::Data;
 use rocket::State;
+use rocket::http::Status;
 use rocket_contrib::json;
 
 use std::io;
@@ -497,7 +498,7 @@ fn compile(program: Data, sessions: State<Mutex<Vec<Session>>>) -> json::Json<JM
     let json = json::Json(JMachine {
         exec_id: exec_id, 
         asm: jmbs,
-        registers: JRegisters { pc: exec.pc, ip: exec.ip, neg: exec.neg, acc: format!("{}", &exec.acc),inbox: format!("{}", &exec.inbox), outbox: format!("{}", &exec.outbox) },
+        registers: JRegisters { pc: exec.pc, ip: exec.ip, neg: exec.neg, acc: format!("{}", &exec.acc), inbox: format!("{}", &exec.inbox), outbox: format!("{}", &exec.outbox) },
     });
     
     let session = Session { exec_id, exec, inp: 1000 };
@@ -507,20 +508,30 @@ fn compile(program: Data, sessions: State<Mutex<Vec<Session>>>) -> json::Json<JM
     json
 }
 
-#[post("/step?<exec_id>")]
-fn step(exec_id: u8, sessions: State<Mutex<Vec<Session>>>) -> json::Json<JMachine> {
+#[get("/step?<exec_id>")]
+fn step(exec_id: u8, sessions: State<Mutex<Vec<Session>>>) -> Result<json::Json<JMachine>, Status> {
     let mut svec = sessions.lock().unwrap();
     let mut sid: usize = 1000;
-    for (i, &session) in svec.iter().enumerate() {
+    for (i, ref session) in svec.iter().enumerate() {
         if session.exec_id == exec_id {
             sid = i;
         }
     }
     let s = &mut svec[sid];
+    if s.exec.needs_input() {
+        if s.inp == 1000 {
+            return Err(Status::PreconditionFailed);
+        }
+        s.exec.cycle(Some(s.inp));
+        s.inp = 1000;
+    }
+    else {
+        s.exec.cycle(None);
+    }
 
     let mut jmbs: Vec<JMailbox> = vec![];
 
-    for (i, mb) in s.exec.mem.iter().enumerate() {
+    for (i, mb) in (&s.exec.mem).iter().enumerate() {
         let lno = match mb {
             Mailbox::STANDARD { lno, .. } => *lno,
             Mailbox::OVERFLOW { lno, .. } => *lno,
@@ -534,16 +545,32 @@ fn step(exec_id: u8, sessions: State<Mutex<Vec<Session>>>) -> json::Json<JMachin
     }
     
     let json = json::Json(JMachine {
-        exec_id: rand::random::<u8>(), 
+        exec_id: s.exec_id, 
         asm: jmbs,
         registers: JRegisters { pc: s.exec.pc, ip: s.exec.ip, neg: s.exec.neg, acc: format!("{}", &s.exec.acc),inbox: format!("{}", &s.exec.inbox), outbox: format!("{}", &s.exec.outbox) },
     });
     
-    json
+    Ok(json)
+}
+
+#[post("/input?<exec_id>", data = "<inp>")]
+fn input(inp: Data, exec_id: u8, sessions: State<Mutex<Vec<Session>>>) -> Status {
+    let mut buf = String::new();
+    inp.open().read_to_string(&mut buf);
+    let mut svec = sessions.lock().unwrap();
+    let mut sid: usize = 1000;
+    for (i, ref session) in svec.iter().enumerate() {
+        if session.exec_id == exec_id {
+            sid = i;
+        }
+    }
+    
+    svec[sid].inp = buf.parse().unwrap();
+    Status::Ok
 }
 
 fn main() {
-    rocket::ignite().manage(Mutex::new(Vec::<Session>::new())).mount("/", routes![compile]).launch();
+    rocket::ignite().manage(Mutex::new(Vec::<Session>::new())).mount("/", routes![compile, step, input]).launch();
 
     /*
     let mut asmblr = Assembler::create();
