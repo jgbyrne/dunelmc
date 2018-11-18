@@ -46,7 +46,6 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener, MouseListene
         addMouseWheelListener(this)
         addMouseListener(this)
 
-        add(editor)
         editor.setBounds(MARGIN, 0, width - MARGIN, height)
         editor.background = Color(0, 0, 0, 0)
         editor.font = Font(Font.MONOSPACED, 0, 20)
@@ -57,6 +56,9 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener, MouseListene
             add(it.boxValueField)
             add(it.mnemonicLabel)
         }
+
+        add(editor)
+        println(editor.text)
 
     }
 
@@ -166,6 +168,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener, MouseListene
                             g.fill(Rectangle2D.Double(0.0, it * lineHeight.toDouble(), width.toDouble(), lineHeight.toDouble()))
                         }
                     }
+                    g.drawString(session.lines[it]?: "", MARGIN.toFloat() + 5f, (it + .85f) * lineHeight.toFloat())
 
                 }
             }
@@ -176,6 +179,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener, MouseListene
             }
         }
         super.paintChildren(g)
+
     }
 
     override fun mouseWheelMoved(e: MouseWheelEvent) {

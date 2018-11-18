@@ -1,6 +1,6 @@
 package core
 
-data class Instruction(val opcode: Int) {
+data class Instruction(var opcode: Int) {
     val operation: Operations
 
     init {

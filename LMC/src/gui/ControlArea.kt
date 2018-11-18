@@ -25,31 +25,35 @@ class ControlArea(val session: Session) : JPanel() {
         playPauseButton.addActionListener {
             session.playing = !session.playing
             playPauseButton.text = if (session.playing) "||" else "▶️"
-            session.startedPlaying()
+            session.startedPlaying {
+                parent.parent.repaint()
+            }
+
         }
         val stepForwardButton = CustomButton("↷", Color.decode("#4CAF50"))
         stepForwardButton.addActionListener {
             if (!session.playing)
                 session.stepForward()
+            parent.parent.repaint()
         }
-        val fastForwardButton = CustomButton("⏩⏭▶▶", Color.decode("#2196F3"))
-        fastForwardButton.addActionListener {
-            session.fastForward()
-        }
-        val resetButton = CustomButton("RESET", Color.decode("#D50000"))
-        resetButton.addActionListener {
-            session.reset()
-        }
+//        val fastForwardButton = CustomButton("⏩⏭▶▶", Color.decode("#2196F3"))
+//        fastForwardButton.addActionListener {
+//            session.fastForward()
+//        }
+//        val resetButton = CustomButton("RESET", Color.decode("#D50000"))
+//        resetButton.addActionListener {
+//            session.reset()
+//        }
 
         val main = JPanel(FlowLayout())
         main.add(ignoreBreakpointButton)
         main.add(playPauseButton)
         main.add(stepForwardButton)
-        main.add(fastForwardButton)
+//        main.add(fastForwardButton)
 
         layout = BorderLayout()
         add(main, BorderLayout.CENTER)
-        add(resetButton, BorderLayout.EAST)
+//        add(resetButton, BorderLayout.EAST)
 
     }
 }
