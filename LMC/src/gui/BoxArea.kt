@@ -4,6 +4,7 @@ import core.Session
 import utils.Vec2
 import utils.with
 import java.awt.*
+import java.awt.Color.WHITE
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseWheelEvent
@@ -84,6 +85,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener, MouseListene
         }
     }
 
+
     fun updateEditor(viewMode: Double) {
         editor.foreground = editor.foreground.run {
             Color(red, green, blue, (getEditorVisibility(viewMode) * 255).toInt())
@@ -144,9 +146,11 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener, MouseListene
     }
 
     override fun paint(g: Graphics) {
-        g.clearRect(0, 0, width, height)
-        super.paint(g)
         g as? Graphics2D ?: throw  Exception("Cast Failed")
+        g.clearRect(0, 0, width, height)
+        g.with(color = WHITE) {
+            g.fillRect(0, 0, width, height)
+        }
 
         g.with(deltaTransform = AffineTransform.getTranslateInstance(0.0, scrollOffset)) {
 
@@ -170,8 +174,8 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener, MouseListene
             session.boxes.forEach {
                 it.draw(g, viewMode, size, this)
             }
-            super.paintChildren(g)
         }
+        super.paintChildren(g)
     }
 
     override fun mouseWheelMoved(e: MouseWheelEvent) {
@@ -191,12 +195,12 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener, MouseListene
             animationThread?.start()
 
         } else {
-            scrollOffset = when (viewMode.roundToInt()) {
-                0 -> max(max(scrollOffset + e.wheelRotation * 40, 0.0), 0.0)
-                1 -> max(max(scrollOffset + e.wheelRotation * 40, 0.0), height / 10.0 * 1.5)
-                2 -> max(max(scrollOffset + e.wheelRotation * 40, 0.0), 100.0)
-                else -> scrollOffset
+            scrollOffset += 40 * e.wheelRotation
+            val size = utils.Vec2(width, height)
+            session.boxes.forEach {
+                it.update(viewMode, size, this)
             }
+            updateEditor(viewMode)
             parent.parent.repaint()
         }
 

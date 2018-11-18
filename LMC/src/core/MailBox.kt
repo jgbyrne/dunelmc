@@ -111,9 +111,9 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
     private fun getBreakPointSize(viewMode: Double, size: Vec2, boxArea: BoxArea): Vec2 {
         return if (viewMode % 1.0 == 0.0) {
             when (viewMode.toInt()) {
-                0 -> Vec2(10,10)
-                1 -> Vec2(10,10)
-                2 -> Vec2(20,20)
+                0 -> Vec2(10, 10)
+                1 -> Vec2(10, 10)
+                2 -> Vec2(20, 20)
                 else -> throw Exception("This is illegal")
             }
         } else {
@@ -125,9 +125,9 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
     private fun getBreakPointLocation(viewMode: Double, size: Vec2, boxArea: BoxArea): Vec2 {
         return if (viewMode % 1.0 == 0.0) {
             when (viewMode.toInt()) {
-                0 -> Vec2(5,10)
-                1 -> Vec2(5,10)
-                2 -> Vec2(0,0)
+                0 -> Vec2(5, 10)
+                1 -> Vec2(5, 10)
+                2 -> Vec2(0, 0)
                 else -> throw Exception("This is illegal")
             }
         } else {
@@ -249,14 +249,14 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
         val valueFieldLocation = getValueFieldLocation(viewMode, size, boxArea)
         boxValueField.bounds = Rectangle(
                 valueFieldLocation.x.toInt(),
-                valueFieldLocation.y.toInt(),
-                valueFieldSize.x.toInt(), //(cellSize.x - 8).toInt(),
-                valueFieldSize.y.toInt())//(size.y / 10 * .6).toInt())
+                (valueFieldLocation.y + boxArea.scrollOffset).toInt(),
+                valueFieldSize.x.toInt(),
+                valueFieldSize.y.toInt())
 
         boxValueField.text = if (viewMode.roundToInt() != 2) instruction.toString() else lineNo.toString()
         mnemonicLabel.bounds = Rectangle(
                 (location.x).toInt(),
-                (location.y).toInt(),
+                (location.y + boxArea.scrollOffset).toInt(),
                 (cellSize.x).toInt(),
                 (cellSize.y * .8).toInt()
         )
