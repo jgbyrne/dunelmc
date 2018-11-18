@@ -14,6 +14,7 @@ class ConsoleArea(val session: Session) : JPanel(GridLayout(1, 1)) {
                 this.maximumSize = this.preferredSize
             }
         }
+        textArea.isEditable = false
         textArea.font = Font(Font.MONOSPACED, 0, 16)
         add(JScrollPane(textArea).also { it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS })
     }

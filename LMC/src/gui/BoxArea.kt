@@ -17,7 +17,11 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
     var scrollOffset: Double = 0.0
 
     private var animationThread: AnimationThread? = null
-    val editor = JTextArea(session.code)
+    val editor = object:JTextArea(session.code){
+        override fun repaint() {
+            parent?.repaint()
+        }
+    }
 
     init {
         size = Dimension(630, 630)
@@ -25,7 +29,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
         addMouseWheelListener(this)
 
         add(editor)
-        editor.setBounds(0, 0, width, height)
+        editor.setBounds(MARGIN, 0, width, height)
         editor.background = Color(0, 0, 0, 0)
         editor.font = Font(Font.MONOSPACED, 0, 20)
         updateEditor(viewMode)
@@ -103,7 +107,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
             animationThread = AnimationThread(
                     this,
                     currentTime,
-                    currentTime + 400,
+                    currentTime + 4000,
                     viewMode,
                     nextViewMode
             )
@@ -157,8 +161,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
     }
 
     companion object {
-        val PREF_WIDTH = 630
-        val MIN_HEIGHT = 630
+        val MARGIN = 40
     }
 
 }

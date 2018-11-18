@@ -2,14 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c65d02b6-5336-4c5d-b28b-2704e20c03b2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/core/Instruction.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Instruction.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/MailBox.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/MailBox.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/Session.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Session.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/BoxArea.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/BoxArea.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/ConsoleArea.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/ConsoleArea.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/ContentPane.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/ContentPane.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/ControlArea.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/ControlArea.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/RegisterArea.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/RegisterArea.kt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -113,13 +110,13 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="java" value="2" />
-          <entry key="kt" value="7787" />
+          <entry key="kt" value="8729" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="JAVA" value="2" />
-          <entry key="Kotlin" value="7787" />
+          <entry key="Kotlin" value="8729" />
         </counts>
       </usages-collector>
     </session>
@@ -129,20 +126,26 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui/ConsoleArea.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
+            <state relative-caret-position="300">
+              <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
               <folding>
-                <element signature="e#13#131#0" expanded="true" />
+                <element signature="e#13#101#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/core/MailBox.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="376">
-              <caret line="87" column="38" lean-forward="true" selection-start-line="87" selection-start-column="38" selection-end-line="87" selection-end-column="38" />
+            <state relative-caret-position="313">
+              <caret line="106" column="25" lean-forward="true" selection-start-line="106" selection-start-column="25" selection-end-line="106" selection-end-column="25" />
+              <folding>
+                <element signature="e#14#392#0" expanded="true" />
+                <element signature="n#!!block;n#getLocation#0;n#!!block;n#MailBox#0" />
+                <element signature="n#!!block;n#getMnemonicVisibility#0;n#!!block;n#MailBox#0" />
+                <element signature="n#!!block;n#draw#0;n#!!block;n#MailBox#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -168,11 +171,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/gui/BoxArea.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="439">
-              <caret line="116" column="52" selection-start-line="116" selection-start-column="52" selection-end-line="116" selection-end-column="52" />
+            <state relative-caret-position="328">
+              <caret line="163" column="23" selection-start-line="163" selection-start-column="23" selection-end-line="163" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -180,8 +183,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/core/Main.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="20" column="28" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
+            <state relative-caret-position="210">
+              <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -225,8 +228,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/core/Session.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="8" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
+            <state relative-caret-position="255">
+              <caret line="17" column="19" lean-forward="true" selection-start-line="17" selection-start-column="19" selection-end-line="17" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -264,14 +267,14 @@
         <option value="$PROJECT_DIR$/src/utils/GraphicsExtensions.kt" />
         <option value="$PROJECT_DIR$/src/gui/Area.kt" />
         <option value="$PROJECT_DIR$/src/core/Operations.kt" />
-        <option value="$PROJECT_DIR$/src/core/Session.kt" />
         <option value="$PROJECT_DIR$/src/gui/RegisterArea.kt" />
         <option value="$PROJECT_DIR$/src/gui/ControlArea.kt" />
         <option value="$PROJECT_DIR$/src/gui/ContentPane.kt" />
-        <option value="$PROJECT_DIR$/src/gui/ConsoleArea.kt" />
         <option value="$PROJECT_DIR$/src/core/Main.kt" />
-        <option value="$PROJECT_DIR$/src/gui/BoxArea.kt" />
+        <option value="$PROJECT_DIR$/src/gui/ConsoleArea.kt" />
         <option value="$PROJECT_DIR$/src/core/MailBox.kt" />
+        <option value="$PROJECT_DIR$/src/core/Session.kt" />
+        <option value="$PROJECT_DIR$/src/gui/BoxArea.kt" />
       </list>
     </option>
   </component>
@@ -350,7 +353,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1542514915443" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1542519184736" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
@@ -422,18 +425,18 @@
       <workItem from="1542476657320" duration="1533000" />
       <workItem from="1542478269668" duration="2529000" />
       <workItem from="1542490826949" duration="14468000" />
-      <workItem from="1542505711129" duration="9199000" />
+      <workItem from="1542505711129" duration="13467000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41855000" />
+    <option name="totallyTimeSpent" value="46123000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1299" height="743" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1915403" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1915403" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -442,16 +445,16 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4924182" visible="true" weight="0.20592824" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49082202" visible="true" weight="0.16848674" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49960095" weight="0.32626426" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50758183" side_tool="true" visible="true" weight="0.20592824" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.509178" side_tool="true" visible="true" weight="0.16848674" />
       <window_info anchor="bottom" id="Version Control" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.49401435" weight="0.13728549" />
+      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.4924182" weight="0.13728549" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="1" weight="0.25" />
       <window_info anchor="right" id="Palette" order="2" />
@@ -580,16 +583,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui/ConsoleArea.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
-          <folding>
-            <element signature="e#13#131#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/gui/ControlArea.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -607,31 +600,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/Session.kt">
+    <entry file="file://$PROJECT_DIR$/src/gui/ConsoleArea.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="8" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/Main.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="20" column="28" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui/BoxArea.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="439">
-          <caret line="116" column="52" selection-start-line="116" selection-start-column="52" selection-end-line="116" selection-end-column="52" />
+        <state relative-caret-position="300">
+          <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
+          <folding>
+            <element signature="e#13#101#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/core/MailBox.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="376">
-          <caret line="87" column="38" lean-forward="true" selection-start-line="87" selection-start-column="38" selection-end-line="87" selection-end-column="38" />
+        <state relative-caret-position="313">
+          <caret line="106" column="25" lean-forward="true" selection-start-line="106" selection-start-column="25" selection-end-line="106" selection-end-column="25" />
+          <folding>
+            <element signature="e#14#392#0" expanded="true" />
+            <element signature="n#!!block;n#getLocation#0;n#!!block;n#MailBox#0" />
+            <element signature="n#!!block;n#getMnemonicVisibility#0;n#!!block;n#MailBox#0" />
+            <element signature="n#!!block;n#draw#0;n#!!block;n#MailBox#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/Main.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/Session.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="19" lean-forward="true" selection-start-line="17" selection-start-column="19" selection-end-line="17" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gui/BoxArea.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="163" column="23" selection-start-line="163" selection-start-column="23" selection-end-line="163" selection-end-column="23" />
         </state>
       </provider>
     </entry>
