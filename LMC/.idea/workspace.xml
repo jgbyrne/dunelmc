@@ -4,9 +4,10 @@
     <list default="true" id="c65d02b6-5336-4c5d-b28b-2704e20c03b2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/MailBox.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/MailBox.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Main.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/Session.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Session.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/BoxArea.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/BoxArea.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/ConsoleArea.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/ConsoleArea.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/GraphicsExtensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/GraphicsExtensions.kt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -92,31 +93,32 @@
         <counts>
           <entry key="project.open.time.10" value="1" />
           <entry key="project.open.time.19" value="1" />
-          <entry key="project.opened" value="2" />
+          <entry key="project.open.time.20" value="1" />
+          <entry key="project.opened" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="java" value="6" />
-          <entry key="kt" value="14" />
+          <entry key="java" value="7" />
+          <entry key="kt" value="15" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JAVA" value="6" />
-          <entry key="Kotlin" value="14" />
+          <entry key="JAVA" value="7" />
+          <entry key="Kotlin" value="15" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="2" />
-          <entry key="kt" value="8729" />
+          <entry key="java" value="3" />
+          <entry key="kt" value="10192" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="2" />
-          <entry key="Kotlin" value="8729" />
+          <entry key="JAVA" value="3" />
+          <entry key="Kotlin" value="10192" />
         </counts>
       </usages-collector>
     </session>
@@ -126,7 +128,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui/ConsoleArea.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
+            <state relative-caret-position="255">
               <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
               <folding>
                 <element signature="e#13#101#0" expanded="true" />
@@ -138,14 +140,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/core/MailBox.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="106" column="25" lean-forward="true" selection-start-line="106" selection-start-column="25" selection-end-line="106" selection-end-column="25" />
-              <folding>
-                <element signature="e#14#392#0" expanded="true" />
-                <element signature="n#!!block;n#getLocation#0;n#!!block;n#MailBox#0" />
-                <element signature="n#!!block;n#getMnemonicVisibility#0;n#!!block;n#MailBox#0" />
-                <element signature="n#!!block;n#draw#0;n#!!block;n#MailBox#0" />
-              </folding>
+            <state relative-caret-position="840">
+              <caret line="71" column="18" selection-start-line="71" selection-start-column="18" selection-end-line="71" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -153,7 +149,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui/ContentPane.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="98">
+            <state relative-caret-position="330">
               <caret line="26" column="31" selection-start-line="26" selection-start-column="31" selection-end-line="26" selection-end-column="31" />
             </state>
           </provider>
@@ -162,41 +158,52 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui/ControlArea.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
+            <state relative-caret-position="195">
               <caret line="20" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/gui/BoxArea.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="22" column="30" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
               <folding>
-                <element signature="e#13#283#0" expanded="true" />
+                <element signature="n#!!block;n#setBounds#0;n#!!block;n#BoxArea#0" />
+                <element signature="n#!!block;n#setBounds#1;n#!!block;n#BoxArea#0" />
+                <element signature="n#!!block;n#AnimationThread#0;n#!!block;n#BoxArea#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/../../jdk-11.0.1/lib/src.zip!/jdk.javadoc/jdk/javadoc/internal/tool/Main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="37" column="13" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/utils/GraphicsExtensions.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="19" selection-start-line="19" selection-end-line="19" />
+              <folding>
+                <element signature="e#15#97#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/gui/BoxArea.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="328">
-              <caret line="163" column="23" selection-start-line="163" selection-start-column="23" selection-end-line="163" selection-end-column="23" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/core/Main.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/core/Operations.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="15" column="41" selection-start-line="15" selection-start-column="41" selection-end-line="15" selection-end-column="41" />
-              <folding>
-                <element signature="e#14#91#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="306">
+              <caret line="34" column="1" selection-start-line="34" selection-start-column="1" selection-end-line="34" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -204,23 +211,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui/RegisterArea.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
+            <state relative-caret-position="240">
               <caret line="22" column="47" selection-start-line="22" selection-start-column="47" selection-end-line="22" selection-end-column="47" />
-              <folding>
-                <element signature="e#13#223#0" expanded="true" />
-                <element signature="e#648#703#0" />
-                <element signature="e#841#1311#0" />
-                <element signature="e#2809#3361#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/../../jdk-11.0.1/lib/src.zip!/jdk.jconsole/sun/tools/jconsole/inspector/OperationEntry.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -228,8 +220,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/core/Session.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" column="19" lean-forward="true" selection-start-line="17" selection-start-column="19" selection-end-line="17" selection-end-column="19" />
+            <state relative-caret-position="216">
+              <caret line="16" column="33" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -264,17 +256,17 @@
         <option value="$PROJECT_DIR$/src/gui/MailBoxArea.kt" />
         <option value="$PROJECT_DIR$/src/gui/boxArea.kt" />
         <option value="$PROJECT_DIR$/src/core/Instruction.kt" />
-        <option value="$PROJECT_DIR$/src/utils/GraphicsExtensions.kt" />
         <option value="$PROJECT_DIR$/src/gui/Area.kt" />
         <option value="$PROJECT_DIR$/src/core/Operations.kt" />
         <option value="$PROJECT_DIR$/src/gui/RegisterArea.kt" />
         <option value="$PROJECT_DIR$/src/gui/ControlArea.kt" />
         <option value="$PROJECT_DIR$/src/gui/ContentPane.kt" />
-        <option value="$PROJECT_DIR$/src/core/Main.kt" />
         <option value="$PROJECT_DIR$/src/gui/ConsoleArea.kt" />
-        <option value="$PROJECT_DIR$/src/core/MailBox.kt" />
-        <option value="$PROJECT_DIR$/src/core/Session.kt" />
         <option value="$PROJECT_DIR$/src/gui/BoxArea.kt" />
+        <option value="$PROJECT_DIR$/src/core/MailBox.kt" />
+        <option value="$PROJECT_DIR$/src/utils/GraphicsExtensions.kt" />
+        <option value="$PROJECT_DIR$/src/core/Session.kt" />
+        <option value="$PROJECT_DIR$/src/core/Main.kt" />
       </list>
     </option>
   </component>
@@ -313,7 +305,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -348,12 +339,13 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1542519184736" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1542524915261" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
@@ -425,18 +417,19 @@
       <workItem from="1542476657320" duration="1533000" />
       <workItem from="1542478269668" duration="2529000" />
       <workItem from="1542490826949" duration="14468000" />
-      <workItem from="1542505711129" duration="13467000" />
+      <workItem from="1542505711129" duration="18935000" />
+      <workItem from="1542524998156" duration="167000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46123000" />
+    <option name="totallyTimeSpent" value="51758000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1299" height="743" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1915403" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19473264" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -445,16 +438,16 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49082202" visible="true" weight="0.16848674" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49960095" weight="0.32626426" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49082202" weight="0.16848674" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.5291301" visible="true" weight="0.34321374" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.509178" side_tool="true" visible="true" weight="0.16848674" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.4708699" side_tool="true" visible="true" weight="0.34321374" />
       <window_info anchor="bottom" id="Version Control" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.4924182" weight="0.13728549" />
+      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.48603353" weight="0.13728549" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="1" weight="0.25" />
       <window_info anchor="right" id="Palette" order="2" />
@@ -477,6 +470,15 @@
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
   </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="breakpointCondition">
+      <expression>
+        <expression-string>boxNo == 0</expression-string>
+        <language-id>kotlin</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
   <component name="editorHistoryManager">
     <entry file="jrt:///home/ubuntu/Desktop/jdk-11.0.1!/java.base/javax/crypto/Mac.class" />
     <entry file="file://$PROJECT_DIR$/src/utils/Vec2.kt">
@@ -490,16 +492,6 @@
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/../../../jdk-11.0.1/lib/src.zip!/jdk.javadoc/jdk/javadoc/internal/tool/Main.java" />
-    <entry file="file://$PROJECT_DIR$/src/utils/GraphicsExtensions.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="41" column="32" lean-forward="true" selection-start-line="41" selection-start-column="32" selection-end-line="41" selection-end-column="32" />
-          <folding>
-            <element signature="e#15#172#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/Instruction.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
@@ -511,12 +503,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="137">
           <caret line="981" column="16" selection-start-line="981" selection-start-column="16" selection-end-line="981" selection-end-column="16" />
-          <folding>
-            <element signature="e#37032#37033#0" expanded="true" />
-            <element signature="e#37056#37057#0" expanded="true" />
-            <element signature="e#63111#63112#0" expanded="true" />
-            <element signature="e#63164#63165#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -531,10 +517,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="168">
           <caret line="3392" column="16" selection-start-line="3392" selection-start-column="16" selection-end-line="3392" selection-end-column="16" />
-          <folding>
-            <element signature="e#116692#116693#0" expanded="true" />
-            <element signature="e#116739#116740#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -570,39 +552,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui/RegisterArea.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="22" column="47" selection-start-line="22" selection-start-column="47" selection-end-line="22" selection-end-column="47" />
-          <folding>
-            <element signature="e#13#223#0" expanded="true" />
-            <element signature="e#648#703#0" />
-            <element signature="e#841#1311#0" />
-            <element signature="e#2809#3361#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui/ControlArea.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="20" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
-          <folding>
-            <element signature="e#13#283#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui/ContentPane.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="98">
-          <caret line="26" column="31" selection-start-line="26" selection-start-column="31" selection-end-line="26" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/gui/ConsoleArea.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
+        <state relative-caret-position="255">
           <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
           <folding>
             <element signature="e#13#101#0" expanded="true" />
@@ -612,35 +564,72 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/core/MailBox.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="106" column="25" lean-forward="true" selection-start-line="106" selection-start-column="25" selection-end-line="106" selection-end-column="25" />
-          <folding>
-            <element signature="e#14#392#0" expanded="true" />
-            <element signature="n#!!block;n#getLocation#0;n#!!block;n#MailBox#0" />
-            <element signature="n#!!block;n#getMnemonicVisibility#0;n#!!block;n#MailBox#0" />
-            <element signature="n#!!block;n#draw#0;n#!!block;n#MailBox#0" />
-          </folding>
+        <state relative-caret-position="840">
+          <caret line="71" column="18" selection-start-line="71" selection-start-column="18" selection-end-line="71" selection-end-column="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/Main.kt">
+    <entry file="file://$PROJECT_DIR$/src/gui/ContentPane.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+        <state relative-caret-position="330">
+          <caret line="26" column="31" selection-start-line="26" selection-start-column="31" selection-end-line="26" selection-end-column="31" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/Session.kt">
+    <entry file="file://$PROJECT_DIR$/src/gui/ControlArea.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="19" lean-forward="true" selection-start-line="17" selection-start-column="19" selection-end-line="17" selection-end-column="19" />
+        <state relative-caret-position="195">
+          <caret line="20" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gui/BoxArea.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="163" column="23" selection-start-line="163" selection-start-column="23" selection-end-line="163" selection-end-column="23" />
+        <state relative-caret-position="165">
+          <caret line="22" column="30" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
+          <folding>
+            <element signature="n#!!block;n#setBounds#0;n#!!block;n#BoxArea#0" />
+            <element signature="n#!!block;n#setBounds#1;n#!!block;n#BoxArea#0" />
+            <element signature="n#!!block;n#AnimationThread#0;n#!!block;n#BoxArea#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../../jdk-11.0.1/lib/src.zip!/jdk.javadoc/jdk/javadoc/internal/tool/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="37" column="13" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utils/GraphicsExtensions.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="19" selection-start-line="19" selection-end-line="19" />
+          <folding>
+            <element signature="e#15#97#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gui/RegisterArea.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="22" column="47" selection-start-line="22" selection-start-column="47" selection-end-line="22" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/Session.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="16" column="33" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/Main.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="34" column="1" selection-start-line="34" selection-start-column="1" selection-end-line="34" selection-end-column="1" />
         </state>
       </provider>
     </entry>

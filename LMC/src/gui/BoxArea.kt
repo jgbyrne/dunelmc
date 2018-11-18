@@ -2,9 +2,11 @@ package gui
 
 import core.Session
 import utils.Vec2
+import utils.with
 import java.awt.*
 import java.awt.event.MouseWheelEvent
 import java.awt.event.MouseWheelListener
+import java.awt.geom.Rectangle2D
 import java.lang.Math.*
 import javax.swing.JPanel
 import javax.swing.JTextArea
@@ -14,14 +16,20 @@ import kotlin.math.roundToInt
 class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
 
     var viewMode: Double = 0.0
-    var scrollOffset: Double = 0.0
 
     private var animationThread: AnimationThread? = null
-    val editor = object:JTextArea(session.code){
+    val editor = object : JTextArea(session.code) {
+        init {
+            isEditable = false
+        }
         override fun repaint() {
             parent?.repaint()
         }
     }
+    val lineHeight: Int
+        get() = editor.let {
+            it.getFontMetrics(it.font)
+        }.height
 
     init {
         size = Dimension(630, 630)
@@ -29,7 +37,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
         addMouseWheelListener(this)
 
         add(editor)
-        editor.setBounds(MARGIN, 0, width, height)
+        editor.setBounds(MARGIN, 0, width - MARGIN, height)
         editor.background = Color(0, 0, 0, 0)
         editor.font = Font(Font.MONOSPACED, 0, 20)
         updateEditor(viewMode)
@@ -50,7 +58,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
         editor.isEnabled = getEditorVisibility(viewMode).roundToInt() != 0
     }
 
-    fun getEditorVisibility(viewMode: Double): Double {
+    private fun getEditorVisibility(viewMode: Double): Double {
         return if (viewMode % 1.0 == 0.0) {
             when (viewMode.toInt()) {
                 0 -> 0.0
@@ -90,11 +98,24 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
         super.paint(g)
         g as? Graphics2D ?: throw  Exception("Cast Failed")
 
+        if (viewMode.roundToInt() == 2) {
+            (0 until session.lines.size).forEach {
+                g.with(color = if (it % 2 == 0) Color(180, 180, 180, ((viewMode - 1.5) * 2 * 255).toInt()) else Color(210, 210, 210, ((viewMode - 1.5) * 2 * 255).toInt())) {
+                    if (session.lineNumberMap.containsKey(it)) {
+                        g.fill(Rectangle2D.Double(MARGIN.toDouble(), it * lineHeight.toDouble(), width.toDouble(), lineHeight.toDouble()))
+                    } else {
+                        g.fill(Rectangle2D.Double(0.0, it * lineHeight.toDouble(), width.toDouble(), lineHeight.toDouble()))
+                    }
+                }
+
+            }
+        }
+
         val size = Vec2(width, height)
         session.boxes.forEach {
             it.draw(g, viewMode, size, this)
         }
-
+        super.paintChildren(g)
     }
 
     override fun mouseWheelMoved(e: MouseWheelEvent) {
@@ -107,7 +128,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
             animationThread = AnimationThread(
                     this,
                     currentTime,
-                    currentTime + 4000,
+                    currentTime + 400,
                     viewMode,
                     nextViewMode
             )
@@ -161,7 +182,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
     }
 
     companion object {
-        val MARGIN = 40
+        val MARGIN = 60
     }
 
 }

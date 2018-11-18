@@ -1,12 +1,14 @@
 package core
 
 import gui.BoxArea
+import gui.BoxArea.Companion.MARGIN
 import utils.Vec2
 import utils.drawStringCentred
 import utils.with
 import java.awt.*
 import java.awt.Color.RED
 import java.awt.geom.AffineTransform
+import java.awt.geom.Ellipse2D
 import java.awt.geom.RoundRectangle2D
 import java.lang.Math.ceil
 import java.lang.Math.floor
@@ -15,7 +17,7 @@ import javax.swing.JLabel
 import javax.swing.JTextField
 import kotlin.math.roundToInt
 
-data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction) {
+data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction, var isBreakPoint: Boolean) {
 
     val color = instruction.operation.color
     val fontColor = instruction.operation.fontColor
@@ -47,22 +49,18 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
     }
     val mnemonicLabel = JLabel(instruction.operation.mnemonic, JLabel.CENTER)
 
-    init {
-
-    }
-
     private fun getLocation(viewMode: Double, size: Vec2, area: BoxArea): Vec2 {
         return if (viewMode % 1.0 == 0.0) {
             when (viewMode.toInt()) {
                 0 -> Vec2(boxNo % 10 * size.x / 10, boxNo / 10 * size.y / 10)
                 1 -> Vec2(boxNo % 10 * size.x / 10, boxNo / 10 * size.y / 10 * 1.5)
-                2 -> Vec2(0, area.editor.let { it.getFontMetrics(it.font) }.height * lineNo)
+                2 -> Vec2(0, area.lineHeight * lineNo)
                 else -> throw Exception("This is illegal")
             }
         } else {
             val along = viewMode % 1.0
             getLocation(ceil(viewMode), size, area) * along + getLocation(floor(viewMode), size, area) * (1 - along)
-        } + Vec2(0, area.scrollOffset * 40)
+        }
     }
 
     private fun getSize(viewMode: Double, size: Vec2, area: BoxArea): Vec2 {
@@ -70,9 +68,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
             when (viewMode.toInt()) {
                 0 -> Vec2(size.x / 10, size.y / 10)
                 1 -> Vec2(size.x / 10, size.y / 10 * 1.5)
-                2 -> Vec2(size.x / 2, area.editor.let {
-                    it.getFontMetrics(it.font)
-                }.height)
+                2 -> Vec2(MARGIN, area.lineHeight)
                 else -> throw Exception("This is illegal")
             }
         } else {
@@ -100,12 +96,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
             when (viewMode.toInt()) {
                 0 -> Vec2(getSize(viewMode, size, boxArea).x - 8, size.y / 10 * .6)
                 1 -> Vec2(getSize(viewMode, size, boxArea).x - 8, size.y / 10 * .6)
-                2 -> {
-                    val metrics = boxArea.editor.let {
-                        it.getFontMetrics(it.font)
-                    }
-                    Vec2(getSize(viewMode, size, boxArea).x - 8, metrics.height)
-                }
+                2 -> Vec2(40, boxArea.lineHeight)
                 else -> throw Exception("This is illegal")
             }
         } else {
@@ -124,7 +115,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
             when (viewMode.toInt()) {
                 0 -> Vec2(location.x + 4, location.y + cellSize.y - valueFieldSize.y - 4)
                 1 -> Vec2(location.x + 4, location.y + cellSize.y - valueFieldSize.y - 4)
-                2 -> Vec2(location.x + 4, location.y + cellSize.y - valueFieldSize.y)
+                2 -> Vec2(location.x + 20, location.y + cellSize.y - valueFieldSize.y)
                 else -> throw Exception("This is illegal")
             }
         } else {
@@ -170,7 +161,33 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                 ))
             }
 
+            if (isBreakPoint && viewMode.roundToInt() == 2) {
+                g.with(color = Color(255, 0, 0, ((viewMode - 1.5) * 2 * 255).toInt())) {
+
+                    g.fill(Ellipse2D.Double(0.0, 0.0, 20.0, 20.0))
+                }
+            }
+
             if (boxNo == boxArea.session.PC) {
+                g.with(color = RED, stroke = BasicStroke(
+                        4f,
+                        BasicStroke.CAP_ROUND,
+                        BasicStroke.JOIN_BEVEL,
+                        1f,
+                        floatArrayOf(7f),
+                        0f
+                )) {
+                    g.draw(RoundRectangle2D.Double(
+                            0.0,
+                            0.0,
+                            cellSize.x,
+                            cellSize.y,
+                            12.0,
+                            12.0
+                    ))
+                }
+            }
+            if (boxNo == boxArea.session.IR) {
                 g.with(color = RED, stroke = BasicStroke(4f)) {
                     g.draw(RoundRectangle2D.Double(
                             0.0,
@@ -199,7 +216,8 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                 valueFieldSize.x.toInt(), //(cellSize.x - 8).toInt(),
                 valueFieldSize.y.toInt())//(size.y / 10 * .6).toInt())
 
-        boxValueField.isEnabled = viewMode.roundToInt() != 2
+        boxValueField.isEditable = viewMode.roundToInt() != 2
+        boxValueField.text = if (viewMode.roundToInt() != 2) instruction.toString() else lineNo.toString()
         mnemonicLabel.bounds = Rectangle(
                 (location.x).toInt(),
                 (location.y).toInt(),
