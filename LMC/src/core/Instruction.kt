@@ -1,7 +1,10 @@
 package core
 
-data class Instruction(val label: String?, val operation: Operations, val operand: String?) {
-    override fun toString(): String {
-        return (operation.opcode / 100).toString() + operand
-    }
+data class Instruction(val opcode: Int) {
+    val operation: Operations
+        get() {
+            val perfect = Operations.values().find { it.opcode == opcode }
+            return perfect ?: Operations.values().find { it.opcode % 100 == opcode % 100 }
+            ?: throw Error("Invalid Instruction")
+        }
 }

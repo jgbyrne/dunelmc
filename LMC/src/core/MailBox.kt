@@ -187,7 +187,7 @@ data class MailBox(val lineNo: Int, val boxNo: Int, val instruction: Instruction
                     ))
                 }
             }
-            if (boxNo == boxArea.session.IR) {
+            if (boxNo == boxArea.session.IP) {
                 g.with(color = RED, stroke = BasicStroke(4f)) {
                     g.draw(RoundRectangle2D.Double(
                             0.0,
