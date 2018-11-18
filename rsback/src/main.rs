@@ -469,6 +469,8 @@ struct JMachine {
     exec_id: u8,
     asm: Vec<JMailbox>,
     registers: JRegisters,
+    halted: usize,
+    output: usize,
 }
 
 #[post("/compile", data = "<program>")]
@@ -496,6 +498,8 @@ fn compile(program: Data, sessions: State<Mutex<Vec<Session>>>) -> json::Json<JM
     
     let exec_id = rand::random::<u8>();
     let json = json::Json(JMachine {
+        halted: 1000,
+        output: 1000,
         exec_id: exec_id, 
         asm: jmbs,
         registers: JRegisters { pc: exec.pc, ip: exec.ip, neg: exec.neg, acc: format!("{}", &exec.acc), inbox: format!("{}", &exec.inbox), outbox: format!("{}", &exec.outbox) },
@@ -517,17 +521,27 @@ fn step(exec_id: u8, sessions: State<Mutex<Vec<Session>>>) -> Result<json::Json<
             sid = i;
         }
     }
+
+    let mut halted = 1000;
+    let mut output = 1000;
+    
     let s = &mut svec[sid];
     let mut cr = CycleResult::SUCCESS;
     if s.exec.needs_input() {
         if s.inp == 1000 {
             return Err(Status::PreconditionFailed);
         }
-        s.exec.cycle(Some(s.inp));
+        cr = s.exec.cycle(Some(s.inp));
         s.inp = 1000;
     }
     else {
-        s.exec.cycle(None);
+        cr = s.exec.cycle(None);
+    }
+
+    match cr {
+        CycleResult::HALT => { halted = 1 },
+        CycleResult::OUTPUT => { output = s.exec.outbox },
+        _ => {},
     }
 
     let mut jmbs: Vec<JMailbox> = vec![];
@@ -546,6 +560,8 @@ fn step(exec_id: u8, sessions: State<Mutex<Vec<Session>>>) -> Result<json::Json<
     }
     
     let json = json::Json(JMachine {
+        halted: halted,
+        output: output,
         exec_id: s.exec_id, 
         asm: jmbs,
         registers: JRegisters { pc: s.exec.pc, ip: s.exec.ip, neg: s.exec.neg, acc: format!("{}", &s.exec.acc),inbox: format!("{}", &s.exec.inbox), outbox: format!("{}", &s.exec.outbox) },
