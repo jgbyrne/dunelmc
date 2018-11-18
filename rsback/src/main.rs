@@ -518,6 +518,7 @@ fn step(exec_id: u8, sessions: State<Mutex<Vec<Session>>>) -> Result<json::Json<
         }
     }
     let s = &mut svec[sid];
+    let mut cr = CycleResult::SUCCESS;
     if s.exec.needs_input() {
         if s.inp == 1000 {
             return Err(Status::PreconditionFailed);
