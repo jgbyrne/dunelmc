@@ -131,41 +131,6 @@ class Exec:
         self.ip      = 000
         self.acc     = 000
         self.neg     = False
-        #print(self.memory)
-
-    def __str__(self):
-        s = "+-" * 40 + "\n"
-        s += " " * 14
-        s += "   IP  {:02d}      PC  {:02d}  ACC {:03d}\n".format(self.ip, self.pc, self.acc)
-        s += " " * 14
-        s += "INBOX {:03d}  OUTBOX {:03d}  NEG {}\n\n ".format(self.inbox, self.outbox, self.neg)
-        s += "      0    1    2    3    4    5    6    7    8    9\n"
-        op = Op(self.memory[self.ip] // 100)
-        if op in (Op.ADD, Op.SUB, Op.STA, Op.LDA, Op.BRA, Op.BRZ, Op.BRP):
-            target = self.memory[self.ip] % 100
-        else:
-            target = 100
-        for a in range(10):
-            s += "  {}   ".format(a)
-            for b in range(10):
-                addr = (10 * a) + b
-                if addr == self.ip:
-                    s = s[:-1]
-                    s += "{{{:03d}}} ".format(self.memory[addr])
-                elif addr == target:
-                    s = s[:-1]
-                    s += ">{:03d}< ".format(self.memory[addr])
-                else:
-                    s += "{:03d}  ".format(self.memory[addr])
-            s += "\n"
-
-        if not self.begun:
-            s += "\n  Program Loaded\n"
-        else:
-            s += "\n  Concluded Operation: {:03d} ({})\n".format(self.memory[self.ip],
-                                                       Op(self.memory[self.ip] // 100).name)
-        s += "-+" * 40
-        return s
 
     def cycle(self, inp = None):
         if not self.begun: self.begun = True
@@ -239,12 +204,12 @@ def compile():
     s = ESesh(next_exec, flask.request.data.decode("utf-8"))
     asm = []
     for i, mb in enumerate(s.asm.mem):
-        asm.append({"addr": "{:02d}".format(i) ,
-                    "data": "{:03d}".format(mb),
-                    "lno" : "999",
+        asm.append({"addr": i ,
+                    "data": mb,
+                    "lno" : int(999),
                     "line": "-----"
                     })
-    registers = {"outbox": "000", "inbox": "000", "pc": "000", "ip": "000", "acc": "000", "neg": False}
+    registers = {"outbox": "000", "inbox": "000", "pc": 0, "ip": 0, "acc": "000", "neg": False}
 
     sessions[next_exec] = s
     next_exec += 1
@@ -287,13 +252,13 @@ def step():
 
     asm = []
     for i, mb in enumerate(ex.memory):
-        asm.append({"addr": "{:02d}".format(i) ,
-                    "data": "{:03d}".format(mb),
-                    "lno" : "999",
+        asm.append({"addr": i ,
+                    "data": mb,
+                    "lno" : int(999),
                     "line": "-----"
                     })
 
-        registers = {"outbox": "{:03d}".format(ex.outbox), "inbox": "{:03d}".format(ex.inbox), "pc": "{:02d}".format(ex.pc), "ip": "{:02d}".format(ex.ip), "acc": "{:03d}".format(ex.acc), "neg": ex.neg}
+        registers = {"outbox": "{:03d}".format(ex.outbox), "inbox": "{:03d}".format(ex.inbox), "pc": ex.pc, "ip": ex.ip, "acc": "{:03d}".format(ex.acc), "neg": ex.neg}
 
     print(registers)
 
@@ -331,13 +296,13 @@ def run():
 
     asm = []
     for i, mb in enumerate(ex.memory):
-        asm.append({"addr": "{:02d}".format(i) ,
-                    "data": "{:03d}".format(mb),
-                    "lno" : "999",
+        asm.append({"addr": i,
+                    "data": mb,
+                    "lno" : int(999),
                     "line": "-----"
                     })
 
-    registers = {"outbox": "{:03d}".format(ex.outbox), "inbox": "{:03d}".format(ex.inbox), "pc": "{:02d}".format(ex.pc), "ip": "{:02d}".format(ex.ip), "acc": "{:03d}".format(ex.acc), "neg": ex.neg}
+            registers = {"outbox": "{:03d}".format(ex.outbox), "inbox": "{:03d}".format(ex.inbox), "pc": ex.pc, "ip": ex.ip, "acc": "{:03d}".format(ex.acc), "neg": ex.neg}
 
     print(registers)
 
@@ -348,4 +313,4 @@ def run():
     else:
         return (json.dumps({"exec_id" : exec_id, "asm" : asm, "labels": sessions[exec_id].asm.symbols, "registers": registers}), 200, {})
 
-app.run(host="127.0.0.1", port=10122)
+app.run(host="172.20.10.7", port=80)#10122)

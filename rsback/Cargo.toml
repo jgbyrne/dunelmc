@@ -1,0 +1,6 @@
+[package]
+name = "rsback"
+version = "0.1.0"
+authors = ["Jack Byrne <jack.byrne@durham.ac.uk>"]
+
+[dependencies]

@@ -6,7 +6,7 @@ with open("./examples/cube.lmc") as prog:
 resp = requests.post("http://127.0.0.1:10122/compile", params={}, data=text)
 eid = resp.json()["exec_id"]
 
-requests.post("http://127.0.0.1:10122/input", params={"exec_id": eid}, data="5")
+requests.post("http://127.0.0.1:10122/input", params={"exec_id": eid}, data="3")
 
 ctr = 0
 while True:

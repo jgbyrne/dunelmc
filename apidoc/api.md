@@ -14,7 +14,7 @@ Response : 200 - Intitial Machine State JSON
 ### Step
 
 ```
-Endpoint: POST /step
+Endpoint: GET /step
 Query   : exec_id - execution id  
 Response: 200  - Good execution (Body is Program State)
           201  - Output (Body is Output Value)
@@ -27,7 +27,7 @@ Response: 200  - Good execution (Body is Program State)
 ### Run
 
 ```
-Endpoint: POST /run
+Endpoint: GET /run
 Query   : exec_id - execution id  
 Response: 200  - Good execution (Body is Program State)
           201  - Output (Body is Output Value)
