@@ -1,0 +1,20 @@
+import requests
+
+with open("./examples/cube.lmc") as prog:
+    text = prog.read()
+
+resp = requests.post("http://172.20.10.7:80/compile", params={}, data=text)
+eid = resp.json()["exec_id"]
+
+requests.post("http://172.20.10.7:80/input", params={"exec_id": eid}, data="5")
+
+ctr = 0
+while True:
+    stepr = requests.get("http://172.20.10.7:80/run", params={"exec_id": eid})
+    if stepr.status_code != 200:
+        if stepr.status_code == 201:
+            print(stepr.text)
+        else:
+            break
+    ctr += 1
+
