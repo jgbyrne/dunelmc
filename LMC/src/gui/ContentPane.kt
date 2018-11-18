@@ -10,7 +10,7 @@ import javax.swing.JScrollPane
 class ContentPane(val session: Session) : JPanel() {
     init {
 
-        border = BorderFactory.createEmptyBorder(10,10,10,10)
+        border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
 
         val mailBoxArea = BoxArea(session)
         val registerArea = RegisterArea(session)
@@ -18,9 +18,12 @@ class ContentPane(val session: Session) : JPanel() {
         val consoleArea = ConsoleArea(session)
 
         val rightSide = JPanel(BorderLayout())
-        rightSide.add(consoleArea, BorderLayout.NORTH)
-        rightSide.add(registerArea, BorderLayout.CENTER)
-        rightSide.add(controlArea, BorderLayout.SOUTH)
+        rightSide.add(consoleArea, BorderLayout.CENTER)
+
+        val rightBottom = JPanel(BorderLayout())
+        rightBottom.add(registerArea, BorderLayout.NORTH)
+        rightBottom.add(controlArea, BorderLayout.SOUTH)
+        rightSide.add(rightBottom, BorderLayout.SOUTH)
 
         layout = BorderLayout()
         add(rightSide, BorderLayout.EAST)

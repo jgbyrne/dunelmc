@@ -9,26 +9,32 @@ import java.awt.geom.RoundRectangle2D
 import javax.swing.BorderFactory
 import javax.swing.JButton
 import javax.swing.JPanel
+import javax.swing.border.Border
 
 class ControlArea(val session: Session) : JPanel() {
     init {
         border = BorderFactory.createEmptyBorder(10, 10, 0, 0)
-//        preferredSize = Dimension(400, 200)
 
-        val ignoreBreakpointButton = CustomButton( "Ø", Color.decode("#2196F3"))
+        val ignoreBreakpointButton = CustomButton("Ø", Color.decode("#2196F3"))
         val stopButton = CustomButton("□", Color.decode("#F44336"))
         val stepBackwardButton = CustomButton("<-", Color.decode("#4CAF50"))
         val playPauseButton = CustomButton(">", Color.decode("#8BC34A"))
         val stepForwardButton = CustomButton("->", Color.decode("#4CAF50"))
         val fastForwardButton = CustomButton("⏩", Color.decode("#2196F3"))
 
-        layout = GridBagLayout()
-        add(ignoreBreakpointButton)
-        add(stopButton)
-        add(stepBackwardButton)
-        add(playPauseButton)
-        add(stepForwardButton)
-        add(fastForwardButton)
+        val resetButton = CustomButton("RESTE", Color.decode("#D50000"))
+
+        val main = JPanel(FlowLayout())
+        main.add(ignoreBreakpointButton)
+        main.add(stopButton)
+        main.add(stepBackwardButton)
+        main.add(playPauseButton)
+        main.add(stepForwardButton)
+        main.add(fastForwardButton)
+
+        layout = BorderLayout()
+        add(main, BorderLayout.CENTER)
+        add(resetButton, BorderLayout.EAST)
 
     }
 }
