@@ -27,11 +27,8 @@ class ContentPane(val session: Session) : JPanel() {
 
         layout = BorderLayout()
         add(rightSide, BorderLayout.EAST)
-        val scrollArea: JScrollPane
-        scrollArea = JScrollPane(mailBoxArea)
-        scrollArea.preferredSize = Dimension(630 + 20, 630 + 20)
-        scrollArea.horizontalScrollBar.isEnabled = false
-        scrollArea.horizontalScrollBar.isVisible = false
+        val scrollArea = JScrollPane(mailBoxArea)
+        scrollArea.preferredSize = Dimension(630, 630)
         add(scrollArea, BorderLayout.CENTER)
 
     }

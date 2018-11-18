@@ -21,6 +21,7 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
 
     init {
         preferredSize = Dimension(PREF_WIDTH, MIN_HEIGHT)
+
         addMouseWheelListener(this)
 
         add(editor)
@@ -31,15 +32,6 @@ class BoxArea(val session: Session) : JPanel(), MouseWheelListener {
             add(it.boxValueField)
             add(it.mnemonicLabel)
         }
-
-    }
-
-    fun findCurrentHieght(): Double {
-        val size = Vec2(width, height)
-        println(size)
-        return session.boxes.last().let {
-            it.getLocation(viewMode, size, this) + it.getSize(viewMode, size)
-        }.y
 
     }
 
