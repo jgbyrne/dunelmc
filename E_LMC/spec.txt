@@ -27,14 +27,14 @@ MOV(A,B)#
 
 
 
-INC(A,B)
+INC(A,B)#
 	A is set to the value in A plus the value in B/#B
 	
 			LDA	A
 			ADD	B
 			STO	A
 
-DEC(A,B)
+DEC(A,B)#
 	A is set ot the value in A minus the value in B/#B
 	
 			LDA 	A
@@ -43,7 +43,7 @@ DEC(A,B)
 
 
 
-MUL(A,B)
+MUL(A,B)#
 	If the system constant 0 and 1 are not present, create it
 	create a TEMP_VAR  equal to A
 	create a TEMP_VAR2 equal to 0
@@ -67,7 +67,12 @@ MUL(A,B)
 	TEMP_VAR	DAT	A
 	TEMP_VAR2	DAT	SV_ZERO
 
-DIV(A,B)
+
+
+
+
+
+DIV(A,B)#
 	If the system constant 1 is not present, create it
 	create a TEMP_VAR equa to 0
 	Continsuoly subtract B from A until A the negative flag is rasied
@@ -90,71 +95,28 @@ DIV(A,B)
 			
 
 
-WHILE(A,B){}
-	A and B can only be labels
-	The loop will run while A == B
-	content can be added to the loop
 
 
-		c_loop	LDA	A
-			SUB	B
-			BRZ	loop
-			BRA	e_o_l
-		loop	{
-			stuff
-			stuff
-			stuff
-			stuff
-			}
-			BRA	c_loop
-		e_o_l	next line
 
-IF(A,B){}
-	A and B can both only be labels
-	It will check if A == B via a zero check
 
-			LDA A
-			SUB B
-			BRZ e_o_l
-			{
-			stuff
-			stuff
-			stuff
-			stuff
-			}
-		e_o_l	next line
 
-FOR(A,B){}
-	A and B can both only be labels
-	This will be a FOR loop that will run between A and B
-	create a TEMP_VAR  with value stored in A
-	create a TEMP_VAR2 with value stored in B
-	check if TEMP_VAR == TEMP_VAR2 via a 0 check
-	otherwise
-		run stuff
-		increiment TEMP_VAR
-		check again
 
-		loop	LDA	TEMP_VAR
-			SUB	TEMP_VAR2
-			BRZ	e_o_l
-			{
-			stuff
-			stuff
-			stuff
-			stuff
-			}
-			LDA	TEMP_VAR
-			ADD	SV_ONE
-			STO	TEMP_VAR
-			BRA	loop
-		e_o_l	next line
-			#
-			#
-	TEMP_VAR	DAT	A
-	TEMP_VAR	DAT	B
 
+JTP(label_name)
+	Sets a point for the program to jump to
+	This is one of only two functions that take a label name as an argment
+	Loads 0 into the memory (Needs an instruction and this is inoffsive to other files)
+
+	label_name	LDA	SC0
 	
+
+BRA(A,B,label_name)
+	Check if A and B are equal
+	If they are, branch to the label name
+	
+			LDA	A
+			SUB	B
+			BRZ	label_name
 
 
 
