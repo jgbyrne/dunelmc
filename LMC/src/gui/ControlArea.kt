@@ -23,7 +23,7 @@ class ControlArea(val session: Session) : JPanel() {
         val fastForwardButton = CustomButton("\u23ed", Color.decode("#2196F3"))
 
         layout = GridBagLayout()
-        add(ignoreBreakpointButton)
+        add(ignoreBreakpointButt    on)
         add(stopButton)
         add(stepBackwardButton)
         add(playPauseButton)
